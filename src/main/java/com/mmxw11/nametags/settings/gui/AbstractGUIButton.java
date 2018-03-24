@@ -1,11 +1,11 @@
-package com.mmxw11.nametags.gsettings.guibuttons;
+package com.mmxw11.nametags.settings.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 
-public abstract class AbstractGuiButton extends GuiButton {
+public abstract class AbstractGUIButton extends GuiButton {
 
-    public AbstractGuiButton(int p_i1020_1_, int p_i1020_2_, int p_i1020_3_, String p_i1020_4_) {
+    public AbstractGUIButton(int p_i1020_1_, int p_i1020_2_, int p_i1020_3_, String p_i1020_4_) {
         super(p_i1020_1_, p_i1020_2_, p_i1020_3_, 200, 20, p_i1020_4_);
     }
 

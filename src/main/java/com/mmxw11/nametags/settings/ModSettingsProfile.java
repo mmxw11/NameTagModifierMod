@@ -1,4 +1,4 @@
-package com.mmxw11.nametags.technical.files;
+package com.mmxw11.nametags.settings;
 
 import com.mmxw11.nametags.NameTagMode;
 

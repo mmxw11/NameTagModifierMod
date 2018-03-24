@@ -1,4 +1,4 @@
-package com.mmxw11.nametags.gsettings;
+package com.mmxw11.nametags.settings.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,17 +6,8 @@ import java.util.List;
 
 import com.mmxw11.nametags.NameTagMod;
 import com.mmxw11.nametags.NameTagMode;
-import com.mmxw11.nametags.gsettings.guibuttons.ARemoveTeamTagsButton;
-import com.mmxw11.nametags.gsettings.guibuttons.AbstractGuiButton;
-import com.mmxw11.nametags.gsettings.guibuttons.ChangeInChatButton;
-import com.mmxw11.nametags.gsettings.guibuttons.ChangeModeButton;
-import com.mmxw11.nametags.gsettings.guibuttons.ChangeOnTablistButton;
-import com.mmxw11.nametags.gsettings.guibuttons.DisplayExtraScoreboardTagsButton;
-import com.mmxw11.nametags.gsettings.guibuttons.ModToggleButton;
-import com.mmxw11.nametags.gsettings.guibuttons.RPlayerTagOnLeaveButton;
-import com.mmxw11.nametags.gsettings.guibuttons.ResetAllCTagsButton;
+import com.mmxw11.nametags.settings.ModSettingsProfile;
 import com.mmxw11.nametags.technical.NameTagHandler;
-import com.mmxw11.nametags.technical.files.ModSettingsProfile;
 import com.mmxw11.nametags.util.ChatHelper;
 
 import net.minecraft.client.Minecraft;
@@ -31,7 +22,7 @@ public class SettingsGui extends GuiScreen {
 
     private NameTagHandler nhandler;
     private ModSettingsProfile modSettings;
-    private List<AbstractGuiButton> tbuttons;
+    private List<AbstractGUIButton> tbuttons;
 
     public SettingsGui() {
         this.nhandler = NameTagMod.getInstance().getNHandler();
@@ -60,7 +51,7 @@ public class SettingsGui extends GuiScreen {
         try {
             drawScreen0(mouseX, mouseY, partialTicks);
         } catch (Exception e) {
-            ChatHelper.sendMessageToPlayer("&cAn error has occurred whle opening settings gui! Try again and if still not working please report this!");
+            ChatHelper.sendMessageToPlayer("&cAn error has occurred whle opening the settings gui! Try again and if still not working please report this!");
         }
     }
 
@@ -101,13 +92,13 @@ public class SettingsGui extends GuiScreen {
             nhandler.getFileManager().saveSettingsFile(modSettings);
             ChatHelper.sendMessageToPlayer("&aSettings successfully saved.");
         } catch (IOException e) {
-            ChatHelper.sendMessageToPlayer("&cAn error has occurred while writting to file see console for stackrace!");
+            ChatHelper.sendMessageToPlayer("&cAn error has occurred while writting to file see console for details!");
             e.printStackTrace();
         }
         if (modSettings.isRemovePlayerTagsOnLeave()) {
-            nhandler.startPlayerUpdater();
+            nhandler.startTask();
         } else {
-            nhandler.stopPlayerUpdater();
+            nhandler.stopTask();
         }
     }
 

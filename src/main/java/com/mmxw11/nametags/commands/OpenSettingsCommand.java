@@ -1,6 +1,7 @@
-package com.mmxw11.nametags.gsettings;
+package com.mmxw11.nametags.commands;
 
 import com.mmxw11.nametags.NameTagMod;
+import com.mmxw11.nametags.settings.gui.SettingsGui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;

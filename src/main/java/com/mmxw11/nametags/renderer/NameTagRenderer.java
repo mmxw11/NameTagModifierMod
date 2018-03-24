@@ -1,4 +1,4 @@
-package com.mmxw11.nametags.technical.core;
+package com.mmxw11.nametags.renderer;
 
 import org.lwjgl.opengl.GL11;
 

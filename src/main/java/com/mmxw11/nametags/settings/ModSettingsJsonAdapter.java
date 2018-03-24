@@ -1,4 +1,4 @@
-package com.mmxw11.nametags.technical.files;
+package com.mmxw11.nametags.settings;
 
 import java.lang.reflect.Type;
 
@@ -30,16 +30,16 @@ public class ModSettingsJsonAdapter implements JsonSerializer<ModSettingsProfile
     @Override
     public ModSettingsProfile deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jobject = json.getAsJsonObject();
-        ModSettingsProfile modSettings = new ModSettingsProfile();
-        modSettings.toggleMod(jobject.get("enabled").getAsBoolean());
+        ModSettingsProfile settings = new ModSettingsProfile();
+        settings.toggleMod(jobject.get("enabled").getAsBoolean());
         String modeName = jobject.get("mode").getAsString();
         NameTagMode mode = NameTagMode.getByName(modeName);
-        modSettings.setNameTagMode(mode);
-        modSettings.toggleDisplayEScoreboardTags(jobject.get("displayEScoreboardTags").getAsBoolean());
-        modSettings.togglePlayerTagsRemovalOnLeave(jobject.get("rplayerTagsOnLeave").getAsBoolean());
-        modSettings.toggleChangeOnTablist(jobject.get("changeOnTablist").getAsBoolean());
-        modSettings.toggleChangeInChat(jobject.get("changeInChat").getAsBoolean());
-        modSettings.toggleAutoTeamTagsRemoval(jobject.get("autoRemoveTeamTags").getAsBoolean());
-        return modSettings;
+        settings.setNameTagMode(mode);
+        settings.toggleDisplayEScoreboardTags(jobject.get("displayEScoreboardTags").getAsBoolean());
+        settings.togglePlayerTagsRemovalOnLeave(jobject.get("rplayerTagsOnLeave").getAsBoolean());
+        settings.toggleChangeOnTablist(jobject.get("changeOnTablist").getAsBoolean());
+        settings.toggleChangeInChat(jobject.get("changeInChat").getAsBoolean());
+        settings.toggleAutoTeamTagsRemoval(jobject.get("autoRemoveTeamTags").getAsBoolean());
+        return settings;
     }
 }

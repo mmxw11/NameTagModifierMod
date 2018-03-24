@@ -1,11 +1,11 @@
-package com.mmxw11.nametags.gsettings.guibuttons;
+package com.mmxw11.nametags.settings.gui;
 
 import com.mmxw11.nametags.NameTagMod;
-import com.mmxw11.nametags.technical.files.ModSettingsProfile;
+import com.mmxw11.nametags.settings.ModSettingsProfile;
 
 import net.minecraft.util.EnumChatFormatting;
 
-public class ChangeOnTablistButton extends AbstractGuiButton {
+public class ChangeOnTablistButton extends AbstractGUIButton {
 
     public ChangeOnTablistButton(int order, int width, int height) {
         super(order, (width / 2) - 205, (height / 2) - 35, "Change on tablist");

@@ -104,6 +104,6 @@ public class IChatComponentBuilder {
             this.ccComponent = new ChatComponentText("");
             components.add(ccComponent);
         }
-        this.ccComponent.appendSibling(addition);
+        ccComponent.appendSibling(addition);
     }
 }

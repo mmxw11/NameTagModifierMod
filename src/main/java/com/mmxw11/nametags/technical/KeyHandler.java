@@ -3,7 +3,7 @@ package com.mmxw11.nametags.technical;
 import org.lwjgl.input.Keyboard;
 
 import com.mmxw11.nametags.NameTagMod;
-import com.mmxw11.nametags.technical.files.ModSettingsProfile;
+import com.mmxw11.nametags.settings.ModSettingsProfile;
 import com.mmxw11.nametags.util.ChatHelper;
 
 import net.minecraft.client.settings.KeyBinding;

@@ -1,10 +1,10 @@
 package com.mmxw11.nametags;
 
+import com.mmxw11.nametags.renderer.CustomTablist;
+import com.mmxw11.nametags.renderer.NameTagRenderer;
+import com.mmxw11.nametags.settings.ModSettingsProfile;
 import com.mmxw11.nametags.technical.NameDataProfile;
 import com.mmxw11.nametags.technical.NameTagHandler;
-import com.mmxw11.nametags.technical.core.CustomTablist;
-import com.mmxw11.nametags.technical.core.NameTagRenderer;
-import com.mmxw11.nametags.technical.files.ModSettingsProfile;
 import com.mmxw11.nametags.util.ChatHelper;
 import com.mmxw11.nametags.util.IChatComponentBuilder;
 import com.mmxw11.nametags.util.Pair;
@@ -176,7 +176,7 @@ public class ModListeners {
         if (eworld != ep.getEntityWorld()) {
             return;
         }
-        if (currentWorld == null || eworld != currentWorld) { // compare memory location.
+        if (currentWorld == null || eworld != currentWorld) {
             this.currentWorld = eworld;
             if (newServerJoin) {
                 if (modSettings.isEnabled()) {

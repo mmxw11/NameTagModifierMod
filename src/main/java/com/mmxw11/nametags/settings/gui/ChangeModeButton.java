@@ -1,13 +1,13 @@
-package com.mmxw11.nametags.gsettings.guibuttons;
+package com.mmxw11.nametags.settings.gui;
 
 import com.mmxw11.nametags.NameTagMod;
 import com.mmxw11.nametags.NameTagMode;
+import com.mmxw11.nametags.settings.ModSettingsProfile;
 import com.mmxw11.nametags.technical.NameTagHandler;
-import com.mmxw11.nametags.technical.files.ModSettingsProfile;
 
 import net.minecraft.util.EnumChatFormatting;
 
-public class ChangeModeButton extends AbstractGuiButton {
+public class ChangeModeButton extends AbstractGUIButton {
 
     public ChangeModeButton(int order, int width, int height) {
         super(order, (width / 2) + 5, (height / 2) - 60, "NameTagMode");

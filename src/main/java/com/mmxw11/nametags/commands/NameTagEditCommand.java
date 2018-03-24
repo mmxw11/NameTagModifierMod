@@ -1,4 +1,4 @@
-package com.mmxw11.nametags.gsettings;
+package com.mmxw11.nametags.commands;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -66,7 +66,7 @@ public class NameTagEditCommand extends CommandBase {
                 String nname = null;
                 if (mode == NameTagMode.EDIT) {
                     if (cname.equalsIgnoreCase("randomname")) {
-                        nname = nhandler.getNameGenerator().generateRandomName();
+                        nname = nhandler.generateRandomName();
                     } else {
                         nname = cname;
                     }
@@ -96,7 +96,7 @@ public class NameTagEditCommand extends CommandBase {
             } else {
                 int count = nhandler.setCustomNamePrefix(target, prefix, true);
                 if (count == 0) {
-                    ChatHelper.sendMessageToPlayer("&cCan't find a custom tag(s) by the name of " + target + "!");
+                    ChatHelper.sendMessageToPlayer("&cCan't find custom tag(s) by the name of " + target + "!");
                 } else {
                     ChatHelper.sendMessageToPlayer("&eSet the prefix of " + ChatHelper.translateAlternateColorCodes('&', prefix.trim())
                             + " &efor the custom name of " + target + ".");
@@ -124,7 +124,7 @@ public class NameTagEditCommand extends CommandBase {
             } else {
                 int count = nhandler.setCustomNameSuffix(target, suffix, true);
                 if (count == 0) {
-                    ChatHelper.sendMessageToPlayer("&cCan't find a custom tag(s) by the name of " + target + "!");
+                    ChatHelper.sendMessageToPlayer("&cCan't find custom tag(s) by the name of " + target + "!");
                 } else {
                     ChatHelper.sendMessageToPlayer("&eSet the suffix of " + ChatHelper.translateAlternateColorCodes('&', suffix.trim())
                             + " &efor the name of " + target + ".");
@@ -136,7 +136,7 @@ public class NameTagEditCommand extends CommandBase {
             } else {
                 int count = nhandler.removeCustomNameTags(target);
                 if (count == 0) {
-                    ChatHelper.sendMessageToPlayer("&Can't find a target(s) by the name of " + target + "!");
+                    ChatHelper.sendMessageToPlayer("&Can't find target(s) by the name of " + target + "!");
                 } else {
                     ChatHelper.sendMessageToPlayer("&eRemoved a total of&7 " + count + " &ecustom tag" + (count == 1 ? "" : "s") + " from name(s).");
                 }

@@ -1,11 +1,11 @@
-package com.mmxw11.nametags.gsettings.guibuttons;
+package com.mmxw11.nametags.settings.gui;
 
 import com.mmxw11.nametags.NameTagMod;
-import com.mmxw11.nametags.technical.files.ModSettingsProfile;
+import com.mmxw11.nametags.settings.ModSettingsProfile;
 
 import net.minecraft.util.EnumChatFormatting;
 
-public class ARemoveTeamTagsButton extends AbstractGuiButton {
+public class ARemoveTeamTagsButton extends AbstractGUIButton {
 
     public ARemoveTeamTagsButton(int order, int width, int height) {
         super(order, (width / 2) - 100, (height / 2) + 15, "Auto remove team tags");
