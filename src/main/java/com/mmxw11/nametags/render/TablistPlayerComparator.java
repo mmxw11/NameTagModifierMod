@@ -1,4 +1,4 @@
-package com.mmxw11.nametags.renderer;
+package com.mmxw11.nametags.render;
 
 import java.util.Comparator;
 

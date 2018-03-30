@@ -1,7 +1,7 @@
 package com.mmxw11.nametags;
 
-import com.mmxw11.nametags.renderer.CustomTablist;
-import com.mmxw11.nametags.renderer.NameTagRenderer;
+import com.mmxw11.nametags.render.CustomTablist;
+import com.mmxw11.nametags.render.NameTagRenderer;
 import com.mmxw11.nametags.settings.ModSettingsProfile;
 import com.mmxw11.nametags.technical.NameDataProfile;
 import com.mmxw11.nametags.technical.NameTagHandler;
@@ -29,17 +29,17 @@ public class ModListeners {
 
     private NameTagHandler nhandler;
     private ModSettingsProfile modSettings;
-    private ServerCheckerListeners sclisteners;
+    private NetworkEventListeners nelisteners;
     private CustomTablist ctablist;
     private NameTagRenderer renderer;
     private World currentWorld;
     private boolean newServerJoin;
     private int multipChunkCacheCounter;
 
-    public ModListeners(NameTagHandler nhandler, ServerCheckerListeners sclisteners) {
+    public ModListeners(NameTagHandler nhandler, NetworkEventListeners nelisteners) {
         this.nhandler = nhandler;
         this.modSettings = nhandler.getModSettings();
-        this.sclisteners = sclisteners;
+        this.nelisteners = nelisteners;
         this.ctablist = new CustomTablist(nhandler);
         this.renderer = new NameTagRenderer(nhandler);
     }
@@ -183,8 +183,8 @@ public class ModListeners {
                     if (modSettings.getNameTagMode() == null) {
                         ChatHelper.sendMessageToPlayer("&cYou haven't set NameTagMode yet! Open the settings gui using the command of /ntagsettings");
                     } else {
-                        String cdomain = sclisteners.getCurrentDomain();
-                        String ldomain = sclisteners.getLastDomain();
+                        String cdomain = nelisteners.getCurrentDomain();
+                        String ldomain = nelisteners.getLastDomain();
                         if (!cdomain.isEmpty() && !ldomain.isEmpty() && !cdomain.equals(ldomain)) {
                             if (modSettings.isRemovePlayerTagsOnLeave()) {
                                 nhandler.removeAllCustomNameTags(true);
@@ -194,7 +194,7 @@ public class ModListeners {
                 }
                 this.newServerJoin = false;
             } else {
-                if (sclisteners.isConnectedToServer()) {
+                if (nelisteners.isConnectedToServer()) {
                     if (++multipChunkCacheCounter < 2) {
                         return;
                     }

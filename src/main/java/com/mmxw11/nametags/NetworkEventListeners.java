@@ -5,14 +5,14 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 
-public class ServerCheckerListeners {
+public class NetworkEventListeners {
 
     private NameTagMod mod;
     private boolean connectedToServer;
     private String cdomain;
     private String lastDomain;
 
-    public ServerCheckerListeners(NameTagMod mod) {
+    public NetworkEventListeners(NameTagMod mod) {
         this.mod = mod;
         this.connectedToServer = false;
         this.cdomain = "";
@@ -24,7 +24,7 @@ public class ServerCheckerListeners {
     }
 
     @SubscribeEvent
-    public void onClientConnnectedToServer(FMLNetworkEvent.ClientConnectedToServerEvent e) {
+    public void onClientConnnected(FMLNetworkEvent.ClientConnectedToServerEvent e) {
         if (e.isLocal) {
             this.cdomain = "";
             return;
@@ -39,7 +39,7 @@ public class ServerCheckerListeners {
     }
 
     @SubscribeEvent
-    public void onClientDisconnectionFomServer(FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
+    public void onClientDisconnection(FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
         this.connectedToServer = false;
         mod.getNHandler().stopTask();
         mod.getMListeners().resetCurrentServer();

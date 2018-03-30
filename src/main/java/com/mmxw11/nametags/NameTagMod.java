@@ -31,7 +31,7 @@ public class NameTagMod {
     private Logger logger;
     private NameTagHandler nhandler;
     private ScheduledExecutorService scheduledExService;
-    private ServerCheckerListeners sclisteners;
+    private NetworkEventListeners nelisteners;
     private ModListeners mlisteners;
 
     @EventHandler
@@ -54,9 +54,9 @@ public class NameTagMod {
         keyHandler.register();
         ClientCommandHandler.instance.registerCommand(new NameTagEditCommand());
         ClientCommandHandler.instance.registerCommand(new OpenSettingsCommand());
-        this.sclisteners = new ServerCheckerListeners(this);
-        sclisteners.register();
-        this.mlisteners = new ModListeners(nhandler, sclisteners);
+        this.nelisteners = new NetworkEventListeners(this);
+        nelisteners.register();
+        this.mlisteners = new ModListeners(nhandler, nelisteners);
         mlisteners.register();
         Runtime.getRuntime().addShutdownHook(new Thread() { // add shutdownhook for the exService
 
@@ -84,8 +84,8 @@ public class NameTagMod {
         return nhandler;
     }
 
-    public ServerCheckerListeners getSCListeners() {
-        return sclisteners;
+    public NetworkEventListeners getNEListeners() {
+        return nelisteners;
     }
 
     public ModListeners getMListeners() {
