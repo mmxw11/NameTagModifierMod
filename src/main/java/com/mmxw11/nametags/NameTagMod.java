@@ -12,7 +12,9 @@ import com.google.gson.JsonParseException;
 import com.mmxw11.nametags.commands.NameTagEditCommand;
 import com.mmxw11.nametags.commands.OpenSettingsCommand;
 import com.mmxw11.nametags.technical.KeyHandler;
+import com.mmxw11.nametags.technical.ModListeners;
 import com.mmxw11.nametags.technical.NameTagHandler;
+import com.mmxw11.nametags.technical.NetworkEventListeners;
 
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.Mod;

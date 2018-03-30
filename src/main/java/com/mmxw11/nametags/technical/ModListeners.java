@@ -1,10 +1,9 @@
-package com.mmxw11.nametags;
+package com.mmxw11.nametags.technical;
 
+import com.mmxw11.nametags.NameTagMode;
 import com.mmxw11.nametags.render.CustomTablist;
 import com.mmxw11.nametags.render.NameTagRenderer;
 import com.mmxw11.nametags.settings.ModSettingsProfile;
-import com.mmxw11.nametags.technical.NameDataProfile;
-import com.mmxw11.nametags.technical.NameTagHandler;
 import com.mmxw11.nametags.util.ChatHelper;
 import com.mmxw11.nametags.util.IChatComponentBuilder;
 import com.mmxw11.nametags.util.Pair;
@@ -56,7 +55,7 @@ public class ModListeners {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void renderLivingEvent(RenderLivingEvent.Specials.Pre<EntityLivingBase> e) {
+    public void onRenderLiving(RenderLivingEvent.Specials.Pre<EntityLivingBase> e) {
         if (!(e.entity instanceof EntityPlayer)) {
             return;
         }
@@ -85,7 +84,7 @@ public class ModListeners {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void renderGameOverlayEvent(RenderGameOverlayEvent e) {
+    public void onRenderGameOverlay(RenderGameOverlayEvent e) {
         if (e.type != RenderGameOverlayEvent.ElementType.PLAYER_LIST) {
             return;
         }
@@ -104,7 +103,7 @@ public class ModListeners {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onClientChatReceivedEvent(ClientChatReceivedEvent e) {
+    public void onClientChatReceived(ClientChatReceivedEvent e) {
         if (e.type != 0 || e.isCanceled()) {
             return;
         }
@@ -164,7 +163,7 @@ public class ModListeners {
     }
 
     @SubscribeEvent
-    public void RenderWorld(EntityJoinWorldEvent e) {
+    public void onEntityJoinWorld(EntityJoinWorldEvent e) {
         EntityPlayer ep = Minecraft.getMinecraft().thePlayer;
         if (ep == null) {
             return;

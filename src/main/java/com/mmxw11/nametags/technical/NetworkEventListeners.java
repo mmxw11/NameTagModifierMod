@@ -1,4 +1,6 @@
-package com.mmxw11.nametags;
+package com.mmxw11.nametags.technical;
+
+import com.mmxw11.nametags.NameTagMod;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
