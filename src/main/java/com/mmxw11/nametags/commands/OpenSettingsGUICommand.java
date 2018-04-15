@@ -7,26 +7,27 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
 
 public class OpenSettingsGUICommand extends CommandBase {
 
     @Override
-    public boolean canCommandSenderUseCommand(ICommandSender sender) {
+    public boolean checkPermission(MinecraftServer mserver, ICommandSender sender) {
         return true;
     }
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "ntagsettings";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender) {
+    public String getUsage(ICommandSender sender) {
         return "/ntagsettings";
     }
 
     @Override
-    public void processCommand(ICommandSender sender, String[] args) throws CommandException {
+    public void execute(MinecraftServer mserver, ICommandSender sender, String[] args) throws CommandException {
         NameTagModClient.getInstance().getSExecutorService().submit(() -> {
             try {
                 Thread.sleep(250);
