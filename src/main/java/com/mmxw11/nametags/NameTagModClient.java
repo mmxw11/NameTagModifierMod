@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid = NameTagModClient.MODID, name = NameTagModClient.NAME, version = NameTagModClient.VERSION, clientSideOnly = true,
-        acceptedMinecraftVersions = "[1.8.9]")
+        acceptedMinecraftVersions = "[1.12.2]")
 public class NameTagModClient {
 
     public static final String MODID = "ntmodifier";

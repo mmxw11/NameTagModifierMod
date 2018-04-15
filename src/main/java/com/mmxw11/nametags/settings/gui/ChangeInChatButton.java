@@ -1,6 +1,6 @@
 package com.mmxw11.nametags.settings.gui;
 
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 public class ChangeInChatButton extends AbstractGUIButton {
 
@@ -18,7 +18,7 @@ public class ChangeInChatButton extends AbstractGUIButton {
 
     @Override
     public void onDrawButton() {
-        super.displayString = EnumChatFormatting.YELLOW + "Change in chat: "
-                + (modSettings.isChangeInChat() ? EnumChatFormatting.GREEN + "Enabled" : EnumChatFormatting.RED + "Disabled");
+        super.displayString = TextFormatting.YELLOW + "Change in chat: "
+                + (modSettings.isChangeInChat() ? TextFormatting.GREEN + "Enabled" : TextFormatting.RED + "Disabled");
     }
 }

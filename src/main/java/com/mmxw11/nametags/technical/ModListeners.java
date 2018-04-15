@@ -6,7 +6,7 @@ import com.mmxw11.nametags.renderer.CustomTablist;
 import com.mmxw11.nametags.renderer.NameTagRenderer;
 import com.mmxw11.nametags.settings.ModSettingsProfile;
 import com.mmxw11.nametags.util.ChatHelper;
-import com.mmxw11.nametags.util.IChatComponentBuilder;
+import com.mmxw11.nametags.util.ITetxComponentBuilder;
 import com.mmxw11.nametags.util.Pair;
 
 import net.minecraft.client.Minecraft;
@@ -154,7 +154,7 @@ public class ModListeners {
                 }
             }
             e.setCanceled(true);
-            IChatComponentBuilder builder = new IChatComponentBuilder();
+            ITetxComponentBuilder builder = new ITetxComponentBuilder();
             for (IChatComponent icomp : builder.buildIChatComponents(fmessage)) {
                 Minecraft.getMinecraft().thePlayer.addChatComponentMessage(icomp);
             }

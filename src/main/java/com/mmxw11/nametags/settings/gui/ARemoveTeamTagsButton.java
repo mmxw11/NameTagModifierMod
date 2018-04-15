@@ -1,6 +1,6 @@
 package com.mmxw11.nametags.settings.gui;
 
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 public class ARemoveTeamTagsButton extends AbstractGUIButton {
 
@@ -18,7 +18,7 @@ public class ARemoveTeamTagsButton extends AbstractGUIButton {
 
     @Override
     public void onDrawButton() {
-        super.displayString = EnumChatFormatting.YELLOW + "Auto remove team tags: "
-                + (modSettings.isAutoRemoveTeamTags() ? EnumChatFormatting.GREEN + "Enabled" : EnumChatFormatting.RED + "Disabled");
+        super.displayString = TextFormatting.YELLOW + "Auto remove team tags: "
+                + (modSettings.isAutoRemoveTeamTags() ? TextFormatting.GREEN + "Enabled" : TextFormatting.RED + "Disabled");
     }
 }

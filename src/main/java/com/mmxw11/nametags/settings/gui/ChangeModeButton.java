@@ -2,7 +2,7 @@ package com.mmxw11.nametags.settings.gui;
 
 import com.mmxw11.nametags.NameTagMode;
 
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 public class ChangeModeButton extends AbstractGUIButton {
 
@@ -26,7 +26,7 @@ public class ChangeModeButton extends AbstractGUIButton {
     @Override
     public void onDrawButton() {
         NameTagMode mode = modSettings.getNameTagMode();
-        super.displayString = EnumChatFormatting.YELLOW + "NameTagMode: " +
-                EnumChatFormatting.GRAY + (mode == null ? "NOT_SET" : mode.getName());
+        super.displayString = TextFormatting.YELLOW + "NameTagMode: " +
+                TextFormatting.GRAY + (mode == null ? "NOT_SET" : mode.getName());
     }
 }

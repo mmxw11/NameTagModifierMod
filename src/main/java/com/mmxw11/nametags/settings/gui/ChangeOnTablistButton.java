@@ -1,6 +1,6 @@
 package com.mmxw11.nametags.settings.gui;
 
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 public class ChangeOnTablistButton extends AbstractGUIButton {
 
@@ -18,7 +18,7 @@ public class ChangeOnTablistButton extends AbstractGUIButton {
 
     @Override
     public void onDrawButton() {
-        super.displayString = EnumChatFormatting.YELLOW + "Change on tablist: "
-                + (modSettings.isChangeOnTablist() ? EnumChatFormatting.GREEN + "Enabled" : EnumChatFormatting.RED + "Disabled");
+        super.displayString = TextFormatting.YELLOW + "Change on tablist: "
+                + (modSettings.isChangeOnTablist() ? TextFormatting.GREEN + "Enabled" : TextFormatting.RED + "Disabled");
     }
 }

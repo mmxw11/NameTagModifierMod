@@ -3,7 +3,7 @@ package com.mmxw11.nametags.settings.gui;
 import com.mmxw11.nametags.NameTagModClient;
 import com.mmxw11.nametags.util.ChatHelper;
 
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 public class ModToggleButton extends AbstractGUIButton {
 
@@ -16,13 +16,13 @@ public class ModToggleButton extends AbstractGUIButton {
         if (success) {
             boolean value = !modSettings.isEnabled();
             modSettings.toggleMod(value);
-            ChatHelper.sendMessageToPlayer(value ? "&aTags enabled." : "&cTags disabled.");
+            ChatHelper.sendMessageToPlayer(value ? "&aTags enabled." : "&cTags disabled.", false);
         }
     }
 
     @Override
     public void onDrawButton() {
-        super.displayString = EnumChatFormatting.YELLOW + NameTagModClient.NAME + ": "
-                + (modSettings.isEnabled() ? EnumChatFormatting.GREEN + "Enabled" : EnumChatFormatting.RED + "Disabled");
+        super.displayString = TextFormatting.YELLOW + NameTagModClient.NAME + ": "
+                + (modSettings.isEnabled() ? TextFormatting.GREEN + "Enabled" : TextFormatting.RED + "Disabled");
     }
 }

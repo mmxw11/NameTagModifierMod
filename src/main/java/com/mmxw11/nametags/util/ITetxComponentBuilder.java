@@ -4,30 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-import net.minecraft.event.ClickEvent;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
 
-public class IChatComponentBuilder {
+public class ITetxComponentBuilder {
 
-    private List<IChatComponent> components;
-    private IChatComponent iccomp;
-    private ChatStyle cstyle;
+    private List<ITextComponent> components;
+    private ITextComponent itcomp;
+    private Style cstyle;
 
-    public IChatComponentBuilder() {
+    public ITetxComponentBuilder() {
         this.components = new ArrayList<>();
-        this.iccomp = new ChatComponentText("");
-        this.cstyle = new ChatStyle();
+        this.itcomp = new TextComponentString("");
+        this.cstyle = new Style();
     }
 
-    public List<IChatComponent> buildIChatComponents(String msg) {
+    public List<ITextComponent> buildITextComponents(String msg) {
         return buildIChatComponents(msg, false);
     }
 
-    private List<IChatComponent> buildIChatComponents(String msg, boolean keepNewlines) {
-        components.add(iccomp);
+    private List<ITextComponent> buildIChatComponents(String msg, boolean keepNewlines) {
+        components.add(itcomp);
         if (msg == null) {
             return components;
         }
@@ -40,11 +40,11 @@ public class IChatComponentBuilder {
             appendNewComponent(msg, currentIndex, matcher.start(groupId));
             switch (groupId) {
                 case 1:
-                    EnumChatFormatting format = ChatHelper.colorFormatMap.get(match.toLowerCase().charAt(1));
-                    if (format == EnumChatFormatting.RESET) {
-                        this.cstyle = new ChatStyle();
-                    } else if (format == EnumChatFormatting.OBFUSCATED || format == EnumChatFormatting.BOLD || format == EnumChatFormatting.STRIKETHROUGH
-                            || format == EnumChatFormatting.UNDERLINE || format == EnumChatFormatting.ITALIC) {
+                    TextFormatting format = ChatHelper.colorFormatMap.get(match.toLowerCase().charAt(1));
+                    if (format == TextFormatting.RESET) {
+                        this.cstyle = new Style();
+                    } else if (format == TextFormatting.OBFUSCATED || format == TextFormatting.BOLD || format == TextFormatting.STRIKETHROUGH
+                            || format == TextFormatting.UNDERLINE || format == TextFormatting.ITALIC) {
                         switch (format) {
                             case BOLD:
                                 cstyle.setBold(true);
@@ -66,24 +66,24 @@ public class IChatComponentBuilder {
                         }
                     } else {
                         // Color resets formatting
-                        this.cstyle = new ChatStyle();
+                        this.cstyle = new Style();
                         cstyle.setColor(format);
                     }
                     break;
                 case 2:
                     if (keepNewlines) {
-                        iccomp.appendSibling(new ChatComponentText("\n"));
+                        itcomp.appendSibling(new TextComponentString("\n"));
                     } else {
-                        this.iccomp = null;
+                        this.itcomp = null;
                     }
                     break;
                 case 3:
                     if (!(match.startsWith("http://") || match.startsWith("https://"))) {
                         match = "http://" + match;
                     }
-                    cstyle.setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, match));
+                    cstyle.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, match));
                     appendNewComponent(msg, currentIndex, matcher.end(groupId));
-                    cstyle.setChatClickEvent(null);
+                    cstyle.setClickEvent(null);
             }
             currentIndex = matcher.end(groupId);
         }
@@ -97,13 +97,13 @@ public class IChatComponentBuilder {
         if (index <= currentIndex) {
             return;
         }
-        IChatComponent addition = new ChatComponentText(msg.substring(currentIndex, index)).setChatStyle(cstyle);
+        ITextComponent addition = new TextComponentString(msg.substring(currentIndex, index)).setStyle(cstyle);
         currentIndex = index;
         this.cstyle = cstyle.createShallowCopy();
-        if (iccomp == null) {
-            this.iccomp = new ChatComponentText("");
-            components.add(iccomp);
+        if (itcomp == null) {
+            this.itcomp = new TextComponentString("");
+            components.add(itcomp);
         }
-        iccomp.appendSibling(addition);
+        itcomp.appendSibling(addition);
     }
 }

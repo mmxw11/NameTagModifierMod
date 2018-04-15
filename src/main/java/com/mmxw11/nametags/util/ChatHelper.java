@@ -14,19 +14,19 @@ import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.ScorePlayerTeam;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 
 public class ChatHelper {
 
     public static final char COLOR_CHAR = '\u00A7';
-    public static final Map<Character, EnumChatFormatting> colorFormatMap;
+    public static final Map<Character, TextFormatting> colorFormatMap;
     public static final Pattern CHAT_INC_PATTERN;
     private static final Pattern STRIP_COLOR_PATTERN;
     static {
-        Builder<Character, EnumChatFormatting> builder = ImmutableMap.builder();
-        for (EnumChatFormatting color : EnumChatFormatting.values()) {
+        Builder<Character, TextFormatting> builder = ImmutableMap.builder();
+        for (TextFormatting color : TextFormatting.values()) {
             builder.put(Character.toLowerCase(color.toString().charAt(1)), color);
         }
         colorFormatMap = builder.build();
@@ -35,8 +35,8 @@ public class ChatHelper {
         STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + COLOR_CHAR + "[0-9A-FK-OR]");
     }
 
-    public static Pair<String, Integer> getPossibleChatMsgSender(IChatComponent iccomp) {
-        final String ftext = iccomp.getFormattedText();
+    public static Pair<String, Integer> getPossibleChatMsgSender(ITextComponent itcomp) {
+        final String ftext = itcomp.getFormattedText();
         final String ltext = ftext.toLowerCase();
         String sender = null;
         int startIndex = -1;
@@ -56,7 +56,7 @@ public class ChatHelper {
     }
 
     public static String getPossibleChatMsgSenderPrefix(String sender, String src) {
-        NetHandlerPlayClient nhpclient = Minecraft.getMinecraft().getNetHandler();
+        NetHandlerPlayClient nhpclient = Minecraft.getMinecraft().getConnection();
         NetworkPlayerInfo info = nhpclient.getPlayerInfo(sender);
         String prefix = null;
         src = src.replaceAll(COLOR_CHAR + "r", "").trim();
@@ -68,7 +68,7 @@ public class ChatHelper {
         if (info != null) {
             ScorePlayerTeam team = info.getPlayerTeam();
             if (team != null) {
-                String cprefix = team.getColorPrefix();
+                String cprefix = team.getPrefix();
                 cprefix = cprefix.replaceAll(COLOR_CHAR + "r", "").trim();
                 if (!cprefix.isEmpty()) {
                     if (src.contains(cprefix)) {
@@ -81,7 +81,7 @@ public class ChatHelper {
                 if (i.getPlayerTeam() == null) {
                     continue;
                 }
-                String cprefix = i.getPlayerTeam().getColorPrefix();
+                String cprefix = i.getPlayerTeam().getPrefix();
                 cprefix = cprefix.replaceAll(COLOR_CHAR + "r", "").trim();
                 if (cprefix.isEmpty()) {
                     continue;
@@ -95,14 +95,14 @@ public class ChatHelper {
         return prefix;
     }
 
-    public static void sendMessageToPlayer(String msg) {
-        EntityPlayer ep = Minecraft.getMinecraft().thePlayer;
+    public static void sendMessageToPlayer(String msg, boolean actionBar) {
+        EntityPlayer ep = Minecraft.getMinecraft().player;
         if (ep == null) {
             return;
         }
         msg = translateAlternateColorCodes('&', NameTagModClient.PREFIX + msg);
-        ChatComponentText ccomponent = new ChatComponentText(msg);
-        ep.addChatComponentMessage(ccomponent);
+        ITextComponent itcomp = new TextComponentString(msg);
+        ep.sendStatusMessage(itcomp, actionBar);
     }
 
     public static String translateAlternateColorCodes(char altColorChar, String textToTranslate) {

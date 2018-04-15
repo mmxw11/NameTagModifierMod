@@ -1,6 +1,6 @@
 package com.mmxw11.nametags.settings.gui;
 
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 public class DisplayExtraScoreboardTagsButton extends AbstractGUIButton {
 
@@ -18,7 +18,7 @@ public class DisplayExtraScoreboardTagsButton extends AbstractGUIButton {
 
     @Override
     public void onDrawButton() {
-        super.displayString = EnumChatFormatting.YELLOW + "Display e-scoreboard tags: "
-                + (modSettings.IsDisplayEScoreboardTags() ? EnumChatFormatting.GREEN + "Enabled" : EnumChatFormatting.RED + "Disabled");
+        super.displayString = TextFormatting.YELLOW + "Display e-scoreboard tags: "
+                + (modSettings.IsDisplayEScoreboardTags() ? TextFormatting.GREEN + "Enabled" : TextFormatting.RED + "Disabled");
     }
 }

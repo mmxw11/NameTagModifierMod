@@ -1,6 +1,6 @@
 package com.mmxw11.nametags.settings.gui;
 
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 public class RPlayerTagOnLeaveButton extends AbstractGUIButton {
 
@@ -18,7 +18,7 @@ public class RPlayerTagOnLeaveButton extends AbstractGUIButton {
 
     @Override
     public void onDrawButton() {
-        super.displayString = EnumChatFormatting.YELLOW + "Remove player tags on leave: "
-                + (modSettings.isRemovePlayerTagsOnLeave() ? EnumChatFormatting.GREEN + "Enabled" : EnumChatFormatting.RED + "Disabled");
+        super.displayString = TextFormatting.YELLOW + "Remove player tags on leave: "
+                + (modSettings.isRemovePlayerTagsOnLeave() ? TextFormatting.GREEN + "Enabled" : TextFormatting.RED + "Disabled");
     }
 }

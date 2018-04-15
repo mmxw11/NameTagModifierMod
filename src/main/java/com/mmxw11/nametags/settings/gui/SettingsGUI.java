@@ -13,7 +13,7 @@ import com.mmxw11.nametags.util.ChatHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -53,7 +53,7 @@ public class SettingsGUI extends GuiScreen {
         try {
             drawScreen0(mouseX, mouseY, partialTicks);
         } catch (Exception e) {
-            ChatHelper.sendMessageToPlayer("&cCannot open settings gui?! " + e.getMessage());
+            ChatHelper.sendMessageToPlayer("&cCannot open settings gui?! " + e.getMessage(), false);
             e.printStackTrace();
         }
     }
@@ -62,11 +62,11 @@ public class SettingsGUI extends GuiScreen {
         super.drawDefaultBackground();
         NameTagMode mode = modSettings.getNameTagMode();
         if (mode == NameTagMode.EDIT) {
-            tbuttons.forEach(b -> b.drawButton(mc, mouseX, mouseY));
+            tbuttons.forEach(b -> b.drawButton(mc, mouseX, mouseY, partialTicks));
         }
         ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
-        String name = EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + NameTagModClient.NAME + " Mod V-" + NameTagModClient.VERSION + " Settings";
-        drawCenteredString(fontRendererObj, name, res.getScaledWidth() / 2, 15, 16777215);
+        String name = TextFormatting.RED + "" + TextFormatting.BOLD + NameTagModClient.NAME + " Mod V-" + NameTagModClient.VERSION + " Settings";
+        drawCenteredString(fontRenderer, name, res.getScaledWidth() / 2, 15, 16777215);
         super.drawScreen(mouseX, mouseY, partialTicks);
         drawToolTips(mouseX, mouseY, res);
     }
@@ -93,9 +93,9 @@ public class SettingsGUI extends GuiScreen {
         super.onGuiClosed();
         try {
             NameTagModClient.getInstance().getFileManager().saveSettingsFile(modSettings);
-            ChatHelper.sendMessageToPlayer("&aSettings successfully saved.");
+            ChatHelper.sendMessageToPlayer("&aSettings successfully saved.", true);
         } catch (IOException e) {
-            ChatHelper.sendMessageToPlayer(EnumChatFormatting.RED + "Unable to save config fle! Check console for details: " + e.getMessage());
+            ChatHelper.sendMessageToPlayer(TextFormatting.RED + "Unable to save config fle! Check console for details: " + e.getMessage(), false);
             e.printStackTrace();
         }
         if (modSettings.isRemovePlayerTagsOnLeave()) {
@@ -112,92 +112,92 @@ public class SettingsGUI extends GuiScreen {
         int defaultY = 18;
         if (mouseX > boxX && mouseX < boxX + defaultX && mouseY > boxY && mouseY < boxY + defaultY) {
             List<String> list = new ArrayList<>();
-            list.add(EnumChatFormatting.YELLOW + NameTagModClient.NAME + ": "
-                    + (modSettings.isEnabled() ? EnumChatFormatting.GREEN + "Enabled" : EnumChatFormatting.RED + "Disabled"));
-            list.add(EnumChatFormatting.WHITE + "Click to enabled or disabled the mod.");
-            drawHoveringText(list, mouseX, mouseY, fontRendererObj);
+            list.add(TextFormatting.YELLOW + NameTagModClient.NAME + ": "
+                    + (modSettings.isEnabled() ? TextFormatting.GREEN + "Enabled" : TextFormatting.RED + "Disabled"));
+            list.add(TextFormatting.WHITE + "Click to enabled or disabled the mod.");
+            drawHoveringText(list, mouseX, mouseY, fontRenderer);
         } else if (mouseX > boxX && mouseX < boxX + defaultX && mouseY > (boxY + 25) && mouseY < (boxY + 25) + defaultY) {
             List<String> list = new ArrayList<>();
-            list.add(EnumChatFormatting.YELLOW + "Change on tablist: " + (modSettings.isChangeOnTablist()
-                    ? EnumChatFormatting.GREEN + "Enabled"
-                    : EnumChatFormatting.RED + "Disabled"));
-            list.add(EnumChatFormatting.WHITE + "Replaces names on tablist when");
-            list.add(EnumChatFormatting.WHITE + "NameTagMode is set to EDIT");
-            list.add(EnumChatFormatting.WHITE + "or adds " + EnumChatFormatting.GRAY + "[H]" + EnumChatFormatting.WHITE + " tag to them if");
-            list.add(EnumChatFormatting.WHITE + "NameTagMode set to HIDE.");
+            list.add(TextFormatting.YELLOW + "Change on tablist: " + (modSettings.isChangeOnTablist()
+                    ? TextFormatting.GREEN + "Enabled"
+                    : TextFormatting.RED + "Disabled"));
+            list.add(TextFormatting.WHITE + "Replaces names on tablist when");
+            list.add(TextFormatting.WHITE + "NameTagMode is set to EDIT");
+            list.add(TextFormatting.WHITE + "or adds " + TextFormatting.GRAY + "[H]" + TextFormatting.WHITE + " tag to them if");
+            list.add(TextFormatting.WHITE + "NameTagMode set to HIDE.");
             list.add("");
-            list.add(EnumChatFormatting.RED + "WARNING: This might now work with");
-            list.add(EnumChatFormatting.RED + "other mods which change how");
-            list.add(EnumChatFormatting.RED + "the tablist works.");
-            drawHoveringText(list, mouseX, mouseY, fontRendererObj);
+            list.add(TextFormatting.RED + "WARNING: This might now work with");
+            list.add(TextFormatting.RED + "other mods which change how");
+            list.add(TextFormatting.RED + "the tablist works.");
+            drawHoveringText(list, mouseX, mouseY, fontRenderer);
         } else if (mouseX > boxX && mouseX < boxX + defaultX && mouseY > (boxY + 50) && mouseY < (boxY + 50) + defaultY) {
             NameTagMode mode = modSettings.getNameTagMode();
             if (mode == NameTagMode.EDIT) {
                 List<String> list = new ArrayList<>();
-                list.add(EnumChatFormatting.YELLOW + "Display extra scoreboard tags: " + (modSettings.IsDisplayEScoreboardTags()
-                        ? EnumChatFormatting.GREEN + "Enabled"
-                        : EnumChatFormatting.RED + "Disabled"));
-                list.add(EnumChatFormatting.WHITE + "Click to toggle the visibility of other");
-                list.add(EnumChatFormatting.WHITE + "scoreboard tags above/under players' names.");
-                list.add(EnumChatFormatting.WHITE + "For instance sometimes there might be");
-                list.add(EnumChatFormatting.WHITE + "a health tag under players' names.");
-                drawHoveringText(list, mouseX, mouseY, fontRendererObj);
+                list.add(TextFormatting.YELLOW + "Display extra scoreboard tags: " + (modSettings.IsDisplayEScoreboardTags()
+                        ? TextFormatting.GREEN + "Enabled"
+                        : TextFormatting.RED + "Disabled"));
+                list.add(TextFormatting.WHITE + "Click to toggle the visibility of other");
+                list.add(TextFormatting.WHITE + "scoreboard tags above/under players' names.");
+                list.add(TextFormatting.WHITE + "For instance sometimes there might be");
+                list.add(TextFormatting.WHITE + "a health tag under players' names.");
+                drawHoveringText(list, mouseX, mouseY, fontRenderer);
             }
         } else if (mouseX > (boxX + 211) && mouseX < (boxX + 211) + defaultX && mouseY > boxY && mouseY < boxY + defaultY) {
             List<String> list = new ArrayList<>();
             NameTagMode mode = modSettings.getNameTagMode();
-            list.add(EnumChatFormatting.YELLOW + "NameTagMode: " +
-                    EnumChatFormatting.GRAY + (mode == null ? "NOT_SET" : mode.getName()));
-            list.add(EnumChatFormatting.WHITE + "Click to change NameTagMode.");
-            drawHoveringText(list, mouseX, mouseY, fontRendererObj);
+            list.add(TextFormatting.YELLOW + "NameTagMode: " +
+                    TextFormatting.GRAY + (mode == null ? "NOT_SET" : mode.getName()));
+            list.add(TextFormatting.WHITE + "Click to change NameTagMode.");
+            drawHoveringText(list, mouseX, mouseY, fontRenderer);
         } else if (mouseX > (boxX + 211) && mouseX < (boxX + 211) + defaultX && mouseY > (boxY + 25) && mouseY < (boxY + 25) + defaultY) {
             List<String> list = new ArrayList<>();
-            list.add(EnumChatFormatting.YELLOW + "Change in chat: " + (modSettings.isChangeInChat()
-                    ? EnumChatFormatting.GREEN + "Enabled"
-                    : EnumChatFormatting.RED + "Disabled"));
-            list.add(EnumChatFormatting.WHITE + "Replaces names in chat when");
-            list.add(EnumChatFormatting.WHITE + "NameTagMode is set to EDIT");
-            list.add(EnumChatFormatting.WHITE + "or adds " + EnumChatFormatting.GRAY + "[H]" + EnumChatFormatting.WHITE + " tag to them if");
-            list.add(EnumChatFormatting.WHITE + "NameTagMode set to HIDE.");
-            drawHoveringText(list, mouseX, mouseY, fontRendererObj);
+            list.add(TextFormatting.YELLOW + "Change in chat: " + (modSettings.isChangeInChat()
+                    ? TextFormatting.GREEN + "Enabled"
+                    : TextFormatting.RED + "Disabled"));
+            list.add(TextFormatting.WHITE + "Replaces names in chat when");
+            list.add(TextFormatting.WHITE + "NameTagMode is set to EDIT");
+            list.add(TextFormatting.WHITE + "or adds " + TextFormatting.GRAY + "[H]" + TextFormatting.WHITE + " tag to them if");
+            list.add(TextFormatting.WHITE + "NameTagMode set to HIDE.");
+            drawHoveringText(list, mouseX, mouseY, fontRenderer);
         } else if (mouseX > (boxX + 211) && mouseX < (boxX + 211) + defaultX && mouseY > (boxY + 50) && mouseY < (boxY + 50) + defaultY) {
             List<String> list = new ArrayList<>();
-            list.add(EnumChatFormatting.YELLOW + "Remove player tags on leave: " + (modSettings.isRemovePlayerTagsOnLeave()
-                    ? EnumChatFormatting.GREEN + "Enabled"
-                    : EnumChatFormatting.RED + "Disabled"));
-            list.add(EnumChatFormatting.WHITE + "Click to toggle if you'd like to");
-            list.add(EnumChatFormatting.WHITE + "automatically remove saved players'");
-            list.add(EnumChatFormatting.WHITE + "custom tags when they leave the world/server.");
-            list.add(EnumChatFormatting.WHITE + "");
-            list.add(EnumChatFormatting.RED + "This is recommended to keep enabled");
-            list.add(EnumChatFormatting.RED + "if you have a lot of custom tags your game");
-            list.add(EnumChatFormatting.RED + "may get laggy after a while.");
-            drawHoveringText(list, mouseX, mouseY, fontRendererObj);
+            list.add(TextFormatting.YELLOW + "Remove player tags on leave: " + (modSettings.isRemovePlayerTagsOnLeave()
+                    ? TextFormatting.GREEN + "Enabled"
+                    : TextFormatting.RED + "Disabled"));
+            list.add(TextFormatting.WHITE + "Click to toggle if you'd like to");
+            list.add(TextFormatting.WHITE + "automatically remove saved players'");
+            list.add(TextFormatting.WHITE + "custom tags when they leave the world/server.");
+            list.add(TextFormatting.WHITE + "");
+            list.add(TextFormatting.RED + "This is recommended to keep enabled");
+            list.add(TextFormatting.RED + "if you have a lot of custom tags your game");
+            list.add(TextFormatting.RED + "may get laggy after a while.");
+            drawHoveringText(list, mouseX, mouseY, fontRenderer);
         } else if (mouseX > (boxX + 105) && mouseX < (boxX + 105) + defaultX && mouseY > (boxY + 75) && mouseY < (boxY + 75) + defaultY) {
             NameTagMode mode = modSettings.getNameTagMode();
             if (mode == NameTagMode.EDIT) {
                 List<String> list = new ArrayList<>();
-                list.add(EnumChatFormatting.YELLOW + "Auto remove team tags: " + (modSettings.isAutoRemoveTeamTags()
-                        ? EnumChatFormatting.GREEN + "Enabled"
-                        : EnumChatFormatting.RED + "Disabled"));
-                list.add(EnumChatFormatting.WHITE + "Click to toggle if team prefixes");
-                list.add(EnumChatFormatting.WHITE + "and suffixes should be removed");
-                list.add(EnumChatFormatting.WHITE + "from players' names by default.");
-                drawHoveringText(list, mouseX, mouseY, fontRendererObj);
+                list.add(TextFormatting.YELLOW + "Auto remove team tags: " + (modSettings.isAutoRemoveTeamTags()
+                        ? TextFormatting.GREEN + "Enabled"
+                        : TextFormatting.RED + "Disabled"));
+                list.add(TextFormatting.WHITE + "Click to toggle if team prefixes");
+                list.add(TextFormatting.WHITE + "and suffixes should be removed");
+                list.add(TextFormatting.WHITE + "from players' names by default.");
+                drawHoveringText(list, mouseX, mouseY, fontRenderer);
             }
         } else if (mouseX > (boxX + 105) && mouseX < (boxX + 105) + defaultX && mouseY > (boxY + 100) && mouseY < (boxY + 100) + defaultY) {
             List<String> list = new ArrayList<>();
-            list.add(EnumChatFormatting.RED + "Reset all custom tags");
-            list.add(EnumChatFormatting.WHITE + "Click to reset all saved cutom tags.");
+            list.add(TextFormatting.RED + "Reset all custom tags");
+            list.add(TextFormatting.WHITE + "Click to reset all saved cutom tags.");
             list.add("");
             int tags = nhandler.getTotalCustomTagsAmount();
             if (tags == 0) {
-                list.add(EnumChatFormatting.GREEN + "No saved custom tags were found.");
+                list.add(TextFormatting.GREEN + "No saved custom tags were found.");
             } else {
-                list.add(EnumChatFormatting.WHITE + "There are currently " + EnumChatFormatting.YELLOW + tags +
-                        EnumChatFormatting.WHITE + " saved custom tag" + (tags == 1 ? "" : "s") + ".");
+                list.add(TextFormatting.WHITE + "There are currently " + TextFormatting.YELLOW + tags +
+                        TextFormatting.WHITE + " saved custom tag" + (tags == 1 ? "" : "s") + ".");
             }
-            drawHoveringText(list, mouseX, mouseY, fontRendererObj);
+            drawHoveringText(list, mouseX, mouseY, fontRenderer);
         }
     }
 }

@@ -20,8 +20,8 @@ public abstract class AbstractGUIButton extends GuiButton {
     }
 
     @Override
-    public void drawButton(Minecraft p_drawButton_1_, int p_drawButton_2_, int p_drawButton_3_) {
-        super.drawButton(p_drawButton_1_, p_drawButton_2_, p_drawButton_3_);
+    public void drawButton(Minecraft p_drawButton_1_, int p_drawButton_2_, int p_drawButton_3_, float p_drawButton_4_) {
+        super.drawButton(p_drawButton_1_, p_drawButton_2_, p_drawButton_3_, p_drawButton_4_);
         onDrawButton();
     }
 
