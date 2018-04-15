@@ -1,14 +1,14 @@
 package com.mmxw11.nametags.commands;
 
-import com.mmxw11.nametags.NameTagMod;
-import com.mmxw11.nametags.settings.gui.SettingsGui;
+import com.mmxw11.nametags.NameTagModClient;
+import com.mmxw11.nametags.settings.gui.SettingsGUI;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 
-public class OpenSettingsCommand extends CommandBase {
+public class OpenSettingsGUICommand extends CommandBase {
 
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender sender) {
@@ -21,18 +21,18 @@ public class OpenSettingsCommand extends CommandBase {
     }
 
     @Override
-    public String getCommandUsage(ICommandSender paramICommandSender) {
+    public String getCommandUsage(ICommandSender sender) {
         return "/ntagsettings";
     }
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
-        NameTagMod.getInstance().getSExecutorService().submit(() -> {
+        NameTagModClient.getInstance().getSExecutorService().submit(() -> {
             try {
                 Thread.sleep(250);
             } catch (InterruptedException e) {
             }
-            SettingsGui gui = new SettingsGui();
+            SettingsGUI gui = new SettingsGUI();
             Minecraft.getMinecraft().displayGuiScreen(gui);
         });
     }

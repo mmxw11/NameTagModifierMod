@@ -1,8 +1,9 @@
 package com.mmxw11.nametags.technical;
 
+import com.mmxw11.nametags.NameTagModClient;
 import com.mmxw11.nametags.NameTagMode;
-import com.mmxw11.nametags.render.CustomTablist;
-import com.mmxw11.nametags.render.NameTagRenderer;
+import com.mmxw11.nametags.renderer.CustomTablist;
+import com.mmxw11.nametags.renderer.NameTagRenderer;
 import com.mmxw11.nametags.settings.ModSettingsProfile;
 import com.mmxw11.nametags.util.ChatHelper;
 import com.mmxw11.nametags.util.IChatComponentBuilder;
@@ -35,12 +36,12 @@ public class ModListeners {
     private boolean newServerJoin;
     private int multipChunkCacheCounter;
 
-    public ModListeners(NameTagHandler nhandler, NetworkEventListeners nelisteners) {
-        this.nhandler = nhandler;
-        this.modSettings = nhandler.getModSettings();
-        this.nelisteners = nelisteners;
-        this.ctablist = new CustomTablist(nhandler);
-        this.renderer = new NameTagRenderer(nhandler);
+    public ModListeners(NameTagModClient mod) {
+        this.nhandler = mod.getNHandler();
+        this.modSettings = mod.getModSettings();
+        this.nelisteners = mod.getNeListeners();
+        this.ctablist = new CustomTablist(mod);
+        this.renderer = new NameTagRenderer(mod);
     }
 
     public void register() {
@@ -75,10 +76,8 @@ public class ModListeners {
         if (nprofile == null) {
             return;
         }
-        if (mode == NameTagMode.HIDE) {
-            e.setCanceled(true);
-        } else if (mode == NameTagMode.EDIT) {
-            e.setCanceled(true);
+        e.setCanceled(true);
+        if (mode == NameTagMode.EDIT) {
             renderer.renderPlayerEntityTag(e.renderer, ep, nprofile, e.x, e.y, e.z);
         }
     }
@@ -135,7 +134,7 @@ public class ModListeners {
             if (!tags) {
                 fmessage = src + fmessage;
             } else {
-                src = src.replaceAll(ChatHelper.MC_COLOR_CHAR + "r", "");
+                src = src.replaceAll(ChatHelper.COLOR_CHAR + "r", "");
                 String prefix = ChatHelper.getPossibleChatMsgSenderPrefix(sender, src);
                 if (prefix == null) {
                     fmessage = src + fmessage;
@@ -149,7 +148,7 @@ public class ModListeners {
                         if (!StringUtils.stripControlCodes(prefix).isEmpty()) {
                             prefix += " ";
                         }
-                        src = src.replace(prefix, ChatHelper.MC_COLOR_CHAR + "r");
+                        src = src.replace(prefix, ChatHelper.COLOR_CHAR + "r");
                     }
                     fmessage = src + fmessage;
                 }

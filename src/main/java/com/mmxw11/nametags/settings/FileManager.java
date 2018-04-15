@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Level;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import com.mmxw11.nametags.NameTagMod;
+import com.mmxw11.nametags.NameTagModClient;
 
 public class FileManager {
 
@@ -54,7 +54,7 @@ public class FileManager {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             return gson.fromJson(reader, ModSettingsProfile.class);
         } catch (Exception e) {
-            NameTagMod.getInstance().getLogger().log(Level.FATAL, "Malformed " + settingsFile + " file regenerating...", e);
+            NameTagModClient.getInstance().getLogger().log(Level.FATAL, "Malformed " + settingsFile + " file regenerating...", e);
             return generateSettingsFile();
         }
     }

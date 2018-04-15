@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mmxw11.nametags.NameTagMod;
+import com.mmxw11.nametags.NameTagModClient;
 import com.mmxw11.nametags.NameTagMode;
 import com.mmxw11.nametags.settings.ModSettingsProfile;
 import com.mmxw11.nametags.technical.NameTagHandler;
@@ -18,21 +18,23 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class SettingsGui extends GuiScreen {
+public class SettingsGUI extends GuiScreen {
 
     private NameTagHandler nhandler;
     private ModSettingsProfile modSettings;
     private List<AbstractGUIButton> tbuttons;
 
-    public SettingsGui() {
-        this.nhandler = NameTagMod.getInstance().getNHandler();
-        this.modSettings = nhandler.getModSettings();
+    public SettingsGUI() {
+        NameTagModClient mod = NameTagModClient.getInstance();
+        this.nhandler = mod.getNHandler();
+        this.modSettings = mod.getModSettings();
         this.tbuttons = new ArrayList<>();
     }
 
     @Override
     public void initGui() {
         buttonList.clear();
+        tbuttons.clear();
         ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
         int width = res.getScaledWidth();
         int height = res.getScaledHeight();
@@ -51,7 +53,8 @@ public class SettingsGui extends GuiScreen {
         try {
             drawScreen0(mouseX, mouseY, partialTicks);
         } catch (Exception e) {
-            ChatHelper.sendMessageToPlayer("&cAn error has occurred whle opening the settings gui! Try again and if still not working please report this!");
+            ChatHelper.sendMessageToPlayer("&cCannot open settings gui?! " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -62,7 +65,7 @@ public class SettingsGui extends GuiScreen {
             tbuttons.forEach(b -> b.drawButton(mc, mouseX, mouseY));
         }
         ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
-        String name = EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + NameTagMod.NAME + " Mod V-" + NameTagMod.VERSION + " Settings";
+        String name = EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + NameTagModClient.NAME + " Mod V-" + NameTagModClient.VERSION + " Settings";
         drawCenteredString(fontRendererObj, name, res.getScaledWidth() / 2, 15, 16777215);
         super.drawScreen(mouseX, mouseY, partialTicks);
         drawToolTips(mouseX, mouseY, res);
@@ -89,10 +92,10 @@ public class SettingsGui extends GuiScreen {
     public void onGuiClosed() {
         super.onGuiClosed();
         try {
-            nhandler.getFileManager().saveSettingsFile(modSettings);
+            NameTagModClient.getInstance().getFileManager().saveSettingsFile(modSettings);
             ChatHelper.sendMessageToPlayer("&aSettings successfully saved.");
         } catch (IOException e) {
-            ChatHelper.sendMessageToPlayer("&cAn error has occurred while writting to file see console for details!");
+            ChatHelper.sendMessageToPlayer(EnumChatFormatting.RED + "Unable to save config fle! Check console for details: " + e.getMessage());
             e.printStackTrace();
         }
         if (modSettings.isRemovePlayerTagsOnLeave()) {
@@ -109,14 +112,15 @@ public class SettingsGui extends GuiScreen {
         int defaultY = 18;
         if (mouseX > boxX && mouseX < boxX + defaultX && mouseY > boxY && mouseY < boxY + defaultY) {
             List<String> list = new ArrayList<>();
-            list.add(EnumChatFormatting.YELLOW + NameTagMod.NAME + ": "
+            list.add(EnumChatFormatting.YELLOW + NameTagModClient.NAME + ": "
                     + (modSettings.isEnabled() ? EnumChatFormatting.GREEN + "Enabled" : EnumChatFormatting.RED + "Disabled"));
             list.add(EnumChatFormatting.WHITE + "Click to enabled or disabled the mod.");
             drawHoveringText(list, mouseX, mouseY, fontRendererObj);
         } else if (mouseX > boxX && mouseX < boxX + defaultX && mouseY > (boxY + 25) && mouseY < (boxY + 25) + defaultY) {
             List<String> list = new ArrayList<>();
             list.add(EnumChatFormatting.YELLOW + "Change on tablist: " + (modSettings.isChangeOnTablist()
-                    ? EnumChatFormatting.GREEN + "Enabled" : EnumChatFormatting.RED + "Disabled"));
+                    ? EnumChatFormatting.GREEN + "Enabled"
+                    : EnumChatFormatting.RED + "Disabled"));
             list.add(EnumChatFormatting.WHITE + "Replaces names on tablist when");
             list.add(EnumChatFormatting.WHITE + "NameTagMode is set to EDIT");
             list.add(EnumChatFormatting.WHITE + "or adds " + EnumChatFormatting.GRAY + "[H]" + EnumChatFormatting.WHITE + " tag to them if");
@@ -131,7 +135,8 @@ public class SettingsGui extends GuiScreen {
             if (mode == NameTagMode.EDIT) {
                 List<String> list = new ArrayList<>();
                 list.add(EnumChatFormatting.YELLOW + "Display extra scoreboard tags: " + (modSettings.IsDisplayEScoreboardTags()
-                        ? EnumChatFormatting.GREEN + "Enabled" : EnumChatFormatting.RED + "Disabled"));
+                        ? EnumChatFormatting.GREEN + "Enabled"
+                        : EnumChatFormatting.RED + "Disabled"));
                 list.add(EnumChatFormatting.WHITE + "Click to toggle the visibility of other");
                 list.add(EnumChatFormatting.WHITE + "scoreboard tags above/under players' names.");
                 list.add(EnumChatFormatting.WHITE + "For instance sometimes there might be");
@@ -148,7 +153,8 @@ public class SettingsGui extends GuiScreen {
         } else if (mouseX > (boxX + 211) && mouseX < (boxX + 211) + defaultX && mouseY > (boxY + 25) && mouseY < (boxY + 25) + defaultY) {
             List<String> list = new ArrayList<>();
             list.add(EnumChatFormatting.YELLOW + "Change in chat: " + (modSettings.isChangeInChat()
-                    ? EnumChatFormatting.GREEN + "Enabled" : EnumChatFormatting.RED + "Disabled"));
+                    ? EnumChatFormatting.GREEN + "Enabled"
+                    : EnumChatFormatting.RED + "Disabled"));
             list.add(EnumChatFormatting.WHITE + "Replaces names in chat when");
             list.add(EnumChatFormatting.WHITE + "NameTagMode is set to EDIT");
             list.add(EnumChatFormatting.WHITE + "or adds " + EnumChatFormatting.GRAY + "[H]" + EnumChatFormatting.WHITE + " tag to them if");
@@ -157,7 +163,8 @@ public class SettingsGui extends GuiScreen {
         } else if (mouseX > (boxX + 211) && mouseX < (boxX + 211) + defaultX && mouseY > (boxY + 50) && mouseY < (boxY + 50) + defaultY) {
             List<String> list = new ArrayList<>();
             list.add(EnumChatFormatting.YELLOW + "Remove player tags on leave: " + (modSettings.isRemovePlayerTagsOnLeave()
-                    ? EnumChatFormatting.GREEN + "Enabled" : EnumChatFormatting.RED + "Disabled"));
+                    ? EnumChatFormatting.GREEN + "Enabled"
+                    : EnumChatFormatting.RED + "Disabled"));
             list.add(EnumChatFormatting.WHITE + "Click to toggle if you'd like to");
             list.add(EnumChatFormatting.WHITE + "automatically remove saved players'");
             list.add(EnumChatFormatting.WHITE + "custom tags when they leave the world/server.");
@@ -171,7 +178,8 @@ public class SettingsGui extends GuiScreen {
             if (mode == NameTagMode.EDIT) {
                 List<String> list = new ArrayList<>();
                 list.add(EnumChatFormatting.YELLOW + "Auto remove team tags: " + (modSettings.isAutoRemoveTeamTags()
-                        ? EnumChatFormatting.GREEN + "Enabled" : EnumChatFormatting.RED + "Disabled"));
+                        ? EnumChatFormatting.GREEN + "Enabled"
+                        : EnumChatFormatting.RED + "Disabled"));
                 list.add(EnumChatFormatting.WHITE + "Click to toggle if team prefixes");
                 list.add(EnumChatFormatting.WHITE + "and suffixes should be removed");
                 list.add(EnumChatFormatting.WHITE + "from players' names by default.");

@@ -12,8 +12,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import com.google.gson.JsonParseException;
-import com.mmxw11.nametags.NameTagMod;
+import com.mmxw11.nametags.NameTagModClient;
 import com.mmxw11.nametags.NameTagMode;
 import com.mmxw11.nametags.settings.FileManager;
 import com.mmxw11.nametags.settings.ModSettingsProfile;
@@ -25,22 +24,19 @@ import net.minecraft.client.network.NetworkPlayerInfo;
 
 public class NameTagHandler {
 
-    private FileManager fmanager;
-    private ModSettingsProfile msettings;
+    private ModSettingsProfile modSettings;
     private List<String> randomNames;
     private ScheduledFuture<?> sfuture;
     private Random random;
     private Map<String, NameDataProfile> customTags;
 
     public NameTagHandler() {
-        this.fmanager = new FileManager();
         this.random = new Random();
         this.customTags = new ConcurrentHashMap<>();
     }
 
-    public void setupFileManager() throws IOException, JsonParseException {
-        fmanager.createFiles();
-        this.msettings = fmanager.loadSettings();
+    public void loadSettings(ModSettingsProfile modSettings, FileManager fmanager) throws IOException {
+        this.modSettings = modSettings;
         this.randomNames = fmanager.readRandomNames();
     }
 
@@ -48,9 +44,9 @@ public class NameTagHandler {
         if (sfuture != null) {
             return;
         }
-        if (msettings.isRemovePlayerTagsOnLeave()) {
+        if (modSettings.isRemovePlayerTagsOnLeave()) {
             ServerStatusUpdater pupdater = new ServerStatusUpdater(this);
-            ScheduledExecutorService exService = NameTagMod.getInstance().getSExecutorService();
+            ScheduledExecutorService exService = NameTagModClient.getInstance().getSExecutorService();
             this.sfuture = exService.scheduleAtFixedRate(pupdater, 5, 20, TimeUnit.SECONDS);
         }
     }
@@ -64,7 +60,7 @@ public class NameTagHandler {
     }
 
     public void setNameTagMode(NameTagMode mode) {
-        msettings.setNameTagMode(mode);
+        modSettings.setNameTagMode(mode);
         if (mode == NameTagMode.EDIT) {
             for (Iterator<NameDataProfile> it = customTags.values().iterator(); it.hasNext();) {
                 NameDataProfile value = it.next();
@@ -90,7 +86,7 @@ public class NameTagHandler {
     }
 
     public int setCustomNameToAllPlayers(String customName) {
-        NameTagMode mode = msettings.getNameTagMode();
+        NameTagMode mode = modSettings.getNameTagMode();
         NetHandlerPlayClient nhpclient = Minecraft.getMinecraft().getNetHandler();
         int counter = 0;
         for (NetworkPlayerInfo info : nhpclient.getPlayerInfoMap()) {
@@ -111,7 +107,7 @@ public class NameTagHandler {
     }
 
     public int setCustomNamePrefix(String customName, String prefix, boolean overrideExisting) {
-        NameTagMode mode = msettings.getNameTagMode();
+        NameTagMode mode = modSettings.getNameTagMode();
         if (mode != NameTagMode.EDIT) {
             return -1;
         }
@@ -130,7 +126,7 @@ public class NameTagHandler {
     }
 
     public int setCustomNamePrefixToAllPlayers(String prefix) {
-        NameTagMode mode = msettings.getNameTagMode();
+        NameTagMode mode = modSettings.getNameTagMode();
         if (mode != NameTagMode.EDIT) {
             return -1;
         }
@@ -146,7 +142,7 @@ public class NameTagHandler {
     }
 
     public int setCustomNameSuffix(String customName, String suffix, boolean overrideExisting) {
-        NameTagMode mode = msettings.getNameTagMode();
+        NameTagMode mode = modSettings.getNameTagMode();
         if (mode != NameTagMode.EDIT) {
             return -1;
         }
@@ -165,7 +161,7 @@ public class NameTagHandler {
     }
 
     public int setCustomNameSuffixToAllPlayers(String suffix) {
-        NameTagMode mode = msettings.getNameTagMode();
+        NameTagMode mode = modSettings.getNameTagMode();
         if (mode != NameTagMode.EDIT) {
             return -1;
         }
@@ -225,14 +221,6 @@ public class NameTagHandler {
         return randomNames.get(number);
     }
 
-    public FileManager getFileManager() {
-        return fmanager;
-    }
-
-    public ModSettingsProfile getModSettings() {
-        return msettings;
-    }
-
     public NameDataProfile getCustomTag(String target) {
         return customTags.get(target.toLowerCase());
     }
@@ -246,7 +234,7 @@ public class NameTagHandler {
     }
 
     public List<NameDataProfile> getCustomTagHolders(String customName) {
-        NameTagMode mode = msettings.getNameTagMode();
+        NameTagMode mode = modSettings.getNameTagMode();
         if (mode != NameTagMode.EDIT) {
             return null;
         }

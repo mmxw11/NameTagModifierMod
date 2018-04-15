@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
-import com.mmxw11.nametags.NameTagMod;
+import com.mmxw11.nametags.NameTagModClient;
 import com.mmxw11.nametags.technical.NameDataProfile;
 import com.mmxw11.nametags.technical.NameTagHandler;
 
@@ -21,17 +21,18 @@ import net.minecraft.util.IChatComponent;
 public class ChatHelper {
 
     public static final char COLOR_CHAR = '\u00A7';
-    public static final String MC_COLOR_CHAR = String.valueOf(COLOR_CHAR);
     public static final Map<Character, EnumChatFormatting> colorFormatMap;
     public static final Pattern CHAT_INC_PATTERN;
+    private static final Pattern STRIP_COLOR_PATTERN;
     static {
         Builder<Character, EnumChatFormatting> builder = ImmutableMap.builder();
         for (EnumChatFormatting color : EnumChatFormatting.values()) {
             builder.put(Character.toLowerCase(color.toString().charAt(1)), color);
         }
         colorFormatMap = builder.build();
-        CHAT_INC_PATTERN = Pattern.compile("(" + String.valueOf(COLOR_CHAR) + "[0-9a-fk-or])|(\\n)|((?:(?:https?):\\/\\/)?(?:[-\\w_\\.]"
-                + "{2,}\\.[a-z]{2,4}.*?(?=[\\.\\?!,;:]?(?:[" + String.valueOf(COLOR_CHAR) + " \\n]|$))))", Pattern.CASE_INSENSITIVE);
+        CHAT_INC_PATTERN = Pattern.compile("(" + COLOR_CHAR + "[0-9a-fk-or])|(\\n)|((?:(?:https?):\\/\\/)?(?:[-\\w_\\.]"
+                + "{2,}\\.[a-z]{2,4}.*?(?=[\\.\\?!,;:]?(?:[" + COLOR_CHAR + " \\n]|$))))", Pattern.CASE_INSENSITIVE);
+        STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + COLOR_CHAR + "[0-9A-FK-OR]");
     }
 
     public static Pair<String, Integer> getPossibleChatMsgSender(IChatComponent iccomp) {
@@ -39,7 +40,7 @@ public class ChatHelper {
         final String ltext = ftext.toLowerCase();
         String sender = null;
         int startIndex = -1;
-        NameTagHandler nhandler = NameTagMod.getInstance().getNHandler();
+        NameTagHandler nhandler = NameTagModClient.getInstance().getNHandler();
         for (NameDataProfile nprofile : nhandler.getAllCustomTags()) {
             String name = nprofile.getRealName().toLowerCase();
             int index = ltext.indexOf(name);
@@ -58,7 +59,7 @@ public class ChatHelper {
         NetHandlerPlayClient nhpclient = Minecraft.getMinecraft().getNetHandler();
         NetworkPlayerInfo info = nhpclient.getPlayerInfo(sender);
         String prefix = null;
-        src = src.replaceAll(MC_COLOR_CHAR + "r", "").trim();
+        src = src.replaceAll(COLOR_CHAR + "r", "").trim();
         int findex = src.indexOf(" ");
         int lindex = src.lastIndexOf(" ");
         if (findex != -1 && lindex != -1 && findex != lindex) {
@@ -68,7 +69,7 @@ public class ChatHelper {
             ScorePlayerTeam team = info.getPlayerTeam();
             if (team != null) {
                 String cprefix = team.getColorPrefix();
-                cprefix = cprefix.replaceAll(MC_COLOR_CHAR + "r", "").trim();
+                cprefix = cprefix.replaceAll(COLOR_CHAR + "r", "").trim();
                 if (!cprefix.isEmpty()) {
                     if (src.contains(cprefix)) {
                         prefix = cprefix;
@@ -81,7 +82,7 @@ public class ChatHelper {
                     continue;
                 }
                 String cprefix = i.getPlayerTeam().getColorPrefix();
-                cprefix = cprefix.replaceAll(MC_COLOR_CHAR + "r", "").trim();
+                cprefix = cprefix.replaceAll(COLOR_CHAR + "r", "").trim();
                 if (cprefix.isEmpty()) {
                     continue;
                 }
@@ -99,7 +100,7 @@ public class ChatHelper {
         if (ep == null) {
             return;
         }
-        msg = translateAlternateColorCodes('&', NameTagMod.PREFIX + msg);
+        msg = translateAlternateColorCodes('&', NameTagModClient.PREFIX + msg);
         ChatComponentText ccomponent = new ChatComponentText(msg);
         ep.addChatComponentMessage(ccomponent);
     }
@@ -113,5 +114,15 @@ public class ChatHelper {
             }
         }
         return new String(b);
+    }
+
+    public static String stripColor(String input, boolean translateColorCodes) {
+        if (input == null) {
+            return null;
+        }
+        if (translateColorCodes) {
+            input = translateAlternateColorCodes('&', input);
+        }
+        return STRIP_COLOR_PATTERN.matcher(input).replaceAll("");
     }
 }

@@ -2,7 +2,7 @@ package com.mmxw11.nametags.commands;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.mmxw11.nametags.NameTagMod;
+import com.mmxw11.nametags.NameTagModClient;
 import com.mmxw11.nametags.NameTagMode;
 import com.mmxw11.nametags.technical.NameTagHandler;
 import com.mmxw11.nametags.util.ChatHelper;
@@ -24,14 +24,15 @@ public class NameTagEditCommand extends CommandBase {
     }
 
     @Override
-    public String getCommandUsage(ICommandSender paramICommandSender) {
+    public String getCommandUsage(ICommandSender sender) {
         return "/ntag <set/setprefix/setsuffix/remove> <name/all> [name/randomname/prefix/suffix]";
     }
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
-        NameTagHandler nhandler = NameTagMod.getInstance().getNHandler();
-        NameTagMode mode = nhandler.getModSettings().getNameTagMode();
+        NameTagModClient mod = NameTagModClient.getInstance();
+        NameTagHandler nhandler = mod.getNHandler();
+        NameTagMode mode = mod.getModSettings().getNameTagMode();
         if (mode == null) {
             ChatHelper.sendMessageToPlayer("&cYou can't use this command because you haven't set NameTagMode yet!");
             return;

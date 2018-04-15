@@ -1,8 +1,5 @@
 package com.mmxw11.nametags.settings.gui;
 
-import com.mmxw11.nametags.NameTagMod;
-import com.mmxw11.nametags.technical.NameTagHandler;
-
 import net.minecraft.util.EnumChatFormatting;
 
 public class ResetAllCTagsButton extends AbstractGUIButton {
@@ -14,7 +11,6 @@ public class ResetAllCTagsButton extends AbstractGUIButton {
     @Override
     public void onMousePressed(boolean success) {
         if (success) {
-            NameTagHandler nhandler = NameTagMod.getInstance().getNHandler();
             nhandler.removeAllCustomNameTags(false);
         }
     }

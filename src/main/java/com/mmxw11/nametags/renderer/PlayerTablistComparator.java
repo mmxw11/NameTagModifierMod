@@ -1,4 +1,4 @@
-package com.mmxw11.nametags.render;
+package com.mmxw11.nametags.renderer;
 
 import java.util.Comparator;
 
@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class TablistPlayerComparator implements Comparator<NetworkPlayerInfo> {
+public class PlayerTablistComparator implements Comparator<NetworkPlayerInfo> {
 
     @Override
     public int compare(NetworkPlayerInfo p_compare_1_, NetworkPlayerInfo p_compare_2_) {

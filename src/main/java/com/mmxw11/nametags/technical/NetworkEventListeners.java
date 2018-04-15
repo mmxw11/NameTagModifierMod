@@ -1,6 +1,6 @@
 package com.mmxw11.nametags.technical;
 
-import com.mmxw11.nametags.NameTagMod;
+import com.mmxw11.nametags.NameTagModClient;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -9,12 +9,12 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 
 public class NetworkEventListeners {
 
-    private NameTagMod mod;
+    private NameTagModClient mod;
     private boolean connectedToServer;
     private String cdomain;
     private String lastDomain;
 
-    public NetworkEventListeners(NameTagMod mod) {
+    public NetworkEventListeners(NameTagModClient mod) {
         this.mod = mod;
         this.connectedToServer = false;
         this.cdomain = "";
@@ -32,12 +32,12 @@ public class NetworkEventListeners {
             return;
         }
         this.connectedToServer = true;
-        mod.getNHandler().startTask();
         String host = FMLClientHandler.instance().getClient().getCurrentServerData().serverIP;
         if (!cdomain.isEmpty()) {
             this.lastDomain = cdomain;
         }
         this.cdomain = host;
+        mod.getNHandler().startTask();
     }
 
     @SubscribeEvent

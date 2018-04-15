@@ -13,12 +13,12 @@ import net.minecraft.util.IChatComponent;
 public class IChatComponentBuilder {
 
     private List<IChatComponent> components;
-    private IChatComponent ccComponent;
+    private IChatComponent iccomp;
     private ChatStyle cstyle;
 
     public IChatComponentBuilder() {
         this.components = new ArrayList<>();
-        this.ccComponent = new ChatComponentText("");
+        this.iccomp = new ChatComponentText("");
         this.cstyle = new ChatStyle();
     }
 
@@ -27,7 +27,7 @@ public class IChatComponentBuilder {
     }
 
     private List<IChatComponent> buildIChatComponents(String msg, boolean keepNewlines) {
-        components.add(ccComponent);
+        components.add(iccomp);
         if (msg == null) {
             return components;
         }
@@ -72,9 +72,9 @@ public class IChatComponentBuilder {
                     break;
                 case 2:
                     if (keepNewlines) {
-                        this.ccComponent.appendSibling(new ChatComponentText("\n"));
+                        iccomp.appendSibling(new ChatComponentText("\n"));
                     } else {
-                        this.ccComponent = null;
+                        this.iccomp = null;
                     }
                     break;
                 case 3:
@@ -100,10 +100,10 @@ public class IChatComponentBuilder {
         IChatComponent addition = new ChatComponentText(msg.substring(currentIndex, index)).setChatStyle(cstyle);
         currentIndex = index;
         this.cstyle = cstyle.createShallowCopy();
-        if (ccComponent == null) {
-            this.ccComponent = new ChatComponentText("");
-            components.add(ccComponent);
+        if (iccomp == null) {
+            this.iccomp = new ChatComponentText("");
+            components.add(iccomp);
         }
-        ccComponent.appendSibling(addition);
+        iccomp.appendSibling(addition);
     }
 }

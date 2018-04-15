@@ -1,12 +1,22 @@
 package com.mmxw11.nametags.settings.gui;
 
+import com.mmxw11.nametags.NameTagModClient;
+import com.mmxw11.nametags.settings.ModSettingsProfile;
+import com.mmxw11.nametags.technical.NameTagHandler;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 
 public abstract class AbstractGUIButton extends GuiButton {
 
+    protected NameTagHandler nhandler;
+    protected ModSettingsProfile modSettings;
+
     public AbstractGUIButton(int p_i1020_1_, int p_i1020_2_, int p_i1020_3_, String p_i1020_4_) {
         super(p_i1020_1_, p_i1020_2_, p_i1020_3_, 200, 20, p_i1020_4_);
+        NameTagModClient mod = NameTagModClient.getInstance();
+        this.nhandler = mod.getNHandler();
+        this.modSettings = mod.getModSettings();
     }
 
     @Override

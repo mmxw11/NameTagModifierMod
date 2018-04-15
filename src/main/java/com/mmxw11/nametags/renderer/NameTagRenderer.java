@@ -1,9 +1,9 @@
-package com.mmxw11.nametags.render;
+package com.mmxw11.nametags.renderer;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mmxw11.nametags.NameTagModClient;
 import com.mmxw11.nametags.technical.NameDataProfile;
-import com.mmxw11.nametags.technical.NameTagHandler;
 import com.mmxw11.nametags.util.ChatHelper;
 
 import net.minecraft.client.Minecraft;
@@ -27,18 +27,18 @@ import net.minecraft.scoreboard.Team;
 
 public class NameTagRenderer {
 
-    private NameTagHandler nhandler;
+    private NameTagModClient mod;
 
-    public NameTagRenderer(NameTagHandler nhandler) {
-        this.nhandler = nhandler;
+    public NameTagRenderer(NameTagModClient mod) {
+        this.mod = mod;
     }
 
-    public void renderPlayerEntityTag(RendererLivingEntity<EntityLivingBase> renderer, EntityPlayer ep, NameDataProfile nprofile, double x, double y, double z) {
+    public void renderPlayerEntityTag(RendererLivingEntity<EntityLivingBase> rlentity, EntityPlayer ep, NameDataProfile nprofile, double x, double y, double z) {
         String plate = "";
         NetHandlerPlayClient nhpclient = Minecraft.getMinecraft().getNetHandler();
         NetworkPlayerInfo info = nhpclient.getPlayerInfo(ep.getUniqueID());
         if (info != null) {
-            boolean aremove = nhandler.getModSettings().isAutoRemoveTeamTags();
+            boolean aremove = mod.getModSettings().isAutoRemoveTeamTags();
             ScorePlayerTeam team = info.getPlayerTeam();
             String cprefix = nprofile.getPrefix();
             String csuffix = nprofile.getSuffix();
@@ -54,11 +54,11 @@ public class NameTagRenderer {
                 plate += team.getColorSuffix();
             }
         }
-        renderPlayerEntityTag(renderer, ep, plate, x, y, z);
+        renderPlayerEntityTag(rlentity, ep, plate, x, y, z);
     }
 
-    private void renderPlayerEntityTag(RendererLivingEntity<EntityLivingBase> renderer, EntityPlayer ep, String str, double x, double y, double z) {
-        RenderManager renderManager = renderer.getRenderManager();
+    private void renderPlayerEntityTag(RendererLivingEntity<EntityLivingBase> rlentity, EntityPlayer ep, String str, double x, double y, double z) {
+        RenderManager renderManager = rlentity.getRenderManager();
         if (!canRenderName(renderManager, ep)) {
             return;
         }
@@ -67,33 +67,33 @@ public class NameTagRenderer {
         if (d0 < (f * f)) {
             GlStateManager.alphaFunc(516, 0.1F);
             if (!ep.isSneaking()) {
-                renderOffsetLivingLabel(renderer, ep, str, x, y - (ep.isChild() ? (double) (ep.height / 2.0F) : 0.0D), z, 0.02666667F, d0);
+                renderOffsetLivingLabel(rlentity, ep, str, x, y - (ep.isChild() ? (double) (ep.height / 2.0F) : 0.0D), z, 0.02666667F, d0);
             } else {
                 renderSnLivingLabel(renderManager, ep, str, x, y, z);
             }
         }
     }
 
-    private void renderOffsetLivingLabel(RendererLivingEntity<EntityLivingBase> renderer, EntityPlayer ep, String str, double x, double y, double z, float p1, double p2) {
-        if (nhandler.getModSettings().IsDisplayEScoreboardTags()) {
+    private void renderOffsetLivingLabel(RendererLivingEntity<EntityLivingBase> rlentity, EntityPlayer ep, String str, double x, double y, double z, float p1, double p2) {
+        if (mod.getModSettings().IsDisplayEScoreboardTags()) {
             if (p2 < 100.0D) {
                 Scoreboard scoreboard = ep.getWorldScoreboard();
                 ScoreObjective scoreobjective = scoreboard.getObjectiveInDisplaySlot(2);
                 if (scoreobjective != null) {
                     Score score = scoreboard.getValueFromObjective(ep.getName(), scoreobjective);
-                    renderLivingLabel(renderer, score.getScorePoints() + " " + scoreobjective.getDisplayName(), ep, x, y, z, RendererLivingEntity.NAME_TAG_RANGE);
-                    y += (double) ((float) renderer.getFontRendererFromRenderManager().FONT_HEIGHT * 1.15F * p1);
+                    renderLivingLabel(rlentity, score.getScorePoints() + " " + scoreobjective.getDisplayName(), ep, x, y, z, RendererLivingEntity.NAME_TAG_RANGE);
+                    y += (double) ((float) rlentity.getFontRendererFromRenderManager().FONT_HEIGHT * 1.15F * p1);
                 }
             }
         }
-        renderLivingLabel(renderer, str, ep, x, y, z, RendererLivingEntity.NAME_TAG_RANGE);
+        renderLivingLabel(rlentity, str, ep, x, y, z, RendererLivingEntity.NAME_TAG_RANGE);
     }
 
-    private void renderLivingLabel(RendererLivingEntity<EntityLivingBase> renderer, String str, EntityPlayer ep, double x, double y, double z, double maxDistance) {
-        RenderManager renderManager = renderer.getRenderManager();
+    private void renderLivingLabel(RendererLivingEntity<EntityLivingBase> rlentity, String str, EntityPlayer ep, double x, double y, double z, double maxDistance) {
+        RenderManager renderManager = rlentity.getRenderManager();
         double d0 = ep.getDistanceSqToEntity(renderManager.livingPlayer);
         if (d0 <= (maxDistance * maxDistance)) {
-            FontRenderer fontrenderer = renderManager.getFontRenderer();
+            FontRenderer frenderer = renderManager.getFontRenderer();
             float f = 1.6F;
             float f1 = 0.016666668F * f;
             GlStateManager.pushMatrix();
@@ -108,21 +108,21 @@ public class NameTagRenderer {
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
             Tessellator tessellator = Tessellator.getInstance();
-            WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+            WorldRenderer wrenderer = tessellator.getWorldRenderer();
             int i = 0;
-            int j = fontrenderer.getStringWidth(str) / 2;
+            int j = frenderer.getStringWidth(str) / 2;
             GlStateManager.disableTexture2D();
-            worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-            worldrenderer.pos((double) (-j - 1), (double) (-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-            worldrenderer.pos((double) (-j - 1), (double) (8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-            worldrenderer.pos((double) (j + 1), (double) (8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-            worldrenderer.pos((double) (j + 1), (double) (-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            wrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+            wrenderer.pos((double) (-j - 1), (double) (-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            wrenderer.pos((double) (-j - 1), (double) (8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            wrenderer.pos((double) (j + 1), (double) (8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            wrenderer.pos((double) (j + 1), (double) (-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
             tessellator.draw();
             GlStateManager.enableTexture2D();
-            fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2, i, 553648127);
+            frenderer.drawString(str, -frenderer.getStringWidth(str) / 2, i, 553648127);
             GlStateManager.enableDepth();
             GlStateManager.depthMask(true);
-            fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2, i, -1);
+            frenderer.drawString(str, -frenderer.getStringWidth(str) / 2, i, -1);
             GlStateManager.enableLighting();
             GlStateManager.disableBlend();
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -146,12 +146,12 @@ public class NameTagRenderer {
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         int i = frenderer.getStringWidth(str) / 2;
         Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-        worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldrenderer.pos((double) (-i - 1), -1.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-        worldrenderer.pos((double) (-i - 1), 8.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-        worldrenderer.pos((double) (i + 1), 8.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-        worldrenderer.pos((double) (i + 1), -1.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+        WorldRenderer wrenderer = tessellator.getWorldRenderer();
+        wrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+        wrenderer.pos((double) (-i - 1), -1.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+        wrenderer.pos((double) (-i - 1), 8.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+        wrenderer.pos((double) (i + 1), 8.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+        wrenderer.pos((double) (i + 1), -1.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
         tessellator.draw();
         GlStateManager.enableTexture2D();
         GlStateManager.depthMask(true);
