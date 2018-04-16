@@ -53,7 +53,7 @@ public class SettingsGUI extends GuiScreen {
         try {
             drawScreen0(mouseX, mouseY, partialTicks);
         } catch (Exception e) {
-            ChatHelper.sendMessageToPlayer("&cCannot open settings gui?! " + e.getMessage(), false);
+            ChatHelper.sendMessageToPlayer("&cCannot open settings gui?! " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -95,7 +95,7 @@ public class SettingsGUI extends GuiScreen {
             NameTagModClient.getInstance().getFileManager().saveSettingsFile(modSettings);
             ChatHelper.sendMessageToPlayer("&aSettings successfully saved.", true);
         } catch (IOException e) {
-            ChatHelper.sendMessageToPlayer(TextFormatting.RED + "Unable to save config fle! Check console for details: " + e.getMessage(), false);
+            ChatHelper.sendMessageToPlayer(TextFormatting.RED + "Unable to save config fle! Check console for details: " + e.getMessage());
             e.printStackTrace();
         }
         if (modSettings.isRemovePlayerTagsOnLeave()) {

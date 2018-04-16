@@ -95,6 +95,10 @@ public class ChatHelper {
         return prefix;
     }
 
+    public static void sendMessageToPlayer(String msg) {
+        sendMessageToPlayer(msg, false);
+    }
+
     public static void sendMessageToPlayer(String msg, boolean actionBar) {
         EntityPlayer ep = Minecraft.getMinecraft().player;
         if (ep == null) {

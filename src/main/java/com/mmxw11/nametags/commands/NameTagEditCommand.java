@@ -35,34 +35,34 @@ public class NameTagEditCommand extends CommandBase {
         NameTagHandler nhandler = mod.getNHandler();
         NameTagMode mode = mod.getModSettings().getNameTagMode();
         if (mode == null) {
-            ChatHelper.sendMessageToPlayer("&cYou can't use this command because you haven't set NameTagMode yet!", false);
+            ChatHelper.sendMessageToPlayer("&cYou can't use this command because you haven't set NameTagMode yet!");
             return;
         }
         if (args.length < 2) {
-            ChatHelper.sendMessageToPlayer("&cUsage: " + getUsage(sender), false);
+            ChatHelper.sendMessageToPlayer("&cUsage: " + getUsage(sender));
             return;
         }
         String action = args[0];
         String target = args[1];
         if (action.equalsIgnoreCase("set")) {
             if (args.length < 3 && mode == NameTagMode.EDIT) {
-                ChatHelper.sendMessageToPlayer("&cUsage: " + getUsage(sender), false);
+                ChatHelper.sendMessageToPlayer("&cUsage: " + getUsage(sender));
                 return;
             }
             String cname = null;
             if (mode == NameTagMode.EDIT) {
                 cname = args[2];
                 if (cname.length() > 16) {
-                    ChatHelper.sendMessageToPlayer("&cMinecraft only supports names up to 16 characters!", false);
+                    ChatHelper.sendMessageToPlayer("&cMinecraft only supports names up to 16 characters!");
                     return;
                 }
             }
             if (target.equalsIgnoreCase("all")) {
                 int count = nhandler.setCustomNameToAllPlayers(cname);
                 if (mode == NameTagMode.EDIT) {
-                    ChatHelper.sendMessageToPlayer("&eSet custom names for &7" + count + " &eplayers.", false);
+                    ChatHelper.sendMessageToPlayer("&eSet custom names for &7" + count + " &eplayers.");
                 } else if (mode == NameTagMode.HIDE) {
-                    ChatHelper.sendMessageToPlayer("&eHide a total of &7" + count + " &enames.", false);
+                    ChatHelper.sendMessageToPlayer("&eHide a total of &7" + count + " &enames.");
                 }
             } else {
                 String nname = null;
@@ -74,64 +74,62 @@ public class NameTagEditCommand extends CommandBase {
                     }
                 }
                 nhandler.setCustomName(target, nname, true);
-                ChatHelper.sendMessageToPlayer("&eSet the custom name of " + (nname == null ? "'HIDE'" : nname) + " for the name of " + target + ".", false);
+                ChatHelper.sendMessageToPlayer("&eSet the custom name of " + (nname == null ? "'HIDE'" : nname) + " for the name of " + target + ".");
             }
         } else if (action.equalsIgnoreCase("setprefix")) {
             if (mode != NameTagMode.EDIT) {
-                ChatHelper.sendMessageToPlayer("&cYou must have NameTagMode set to EDIT to use this command!", false);
+                ChatHelper.sendMessageToPlayer("&cYou must have NameTagMode set to EDIT to use this command!");
                 return;
             }
             if (args.length < 3) {
-                ChatHelper.sendMessageToPlayer("&cUsage: " + getUsage(sender), false);
+                ChatHelper.sendMessageToPlayer("&cUsage: " + getUsage(sender));
                 return;
             }
             String prefix = args[2];
             int spaceCount = StringUtils.countMatches(prefix, "/s");
             if ((prefix.replaceAll("/s", "").length() + spaceCount) > 16) {
-                ChatHelper.sendMessageToPlayer("&cMinecraft only supports prefixes up to 16 characters!", false);
+                ChatHelper.sendMessageToPlayer("&cMinecraft only supports prefixes up to 16 characters!");
                 return;
             }
             prefix = prefix.replaceAll("/s", " ");
             if (target.equalsIgnoreCase("all")) {
                 int count = nhandler.setCustomNamePrefixToAllPlayers(prefix);
-                ChatHelper.sendMessageToPlayer("&eSet the prefix of " + ChatHelper.translateAlternateColorCodes('&', prefix.trim()) + " &efor &7" + count + " &eplayers.",
-                        false);
+                ChatHelper.sendMessageToPlayer("&eSet the prefix of " + ChatHelper.translateAlternateColorCodes('&', prefix.trim()) + " &efor &7" + count + " &eplayers.");
             } else {
                 int count = nhandler.setCustomNamePrefix(target, prefix, true);
                 if (count == 0) {
-                    ChatHelper.sendMessageToPlayer("&cCan't find custom tag(s) by the name of " + target + "!", false);
+                    ChatHelper.sendMessageToPlayer("&cCan't find custom tag(s) by the name of " + target + "!");
                 } else {
                     ChatHelper.sendMessageToPlayer("&eSet the prefix of " + ChatHelper.translateAlternateColorCodes('&', prefix.trim())
-                            + " &efor the custom name of " + target + ".", false);
+                            + " &efor the custom name of " + target + ".");
                 }
             }
         } else if (action.equalsIgnoreCase("setsuffix")) {
             if (mode != NameTagMode.EDIT) {
-                ChatHelper.sendMessageToPlayer("&cYou must have NameTagMode set to EDIT to use this command!", false);
+                ChatHelper.sendMessageToPlayer("&cYou must have NameTagMode set to EDIT to use this command!");
                 return;
             }
             if (args.length < 3) {
-                ChatHelper.sendMessageToPlayer("&cUsage: " + getUsage(sender), false);
+                ChatHelper.sendMessageToPlayer("&cUsage: " + getUsage(sender));
                 return;
             }
             String suffix = args[2];
             int spaceCount = StringUtils.countMatches(suffix, "/s");
             if ((suffix.replaceAll("/s", "").length() + spaceCount) > 16) {
-                ChatHelper.sendMessageToPlayer("&cMinecraft only supports suffixes up to 16 characters!", false);
+                ChatHelper.sendMessageToPlayer("&cMinecraft only supports suffixes up to 16 characters!");
                 return;
             }
             suffix = suffix.replaceAll("/s", " ");
             if (target.equalsIgnoreCase("all")) {
                 int count = nhandler.setCustomNameSuffixToAllPlayers(suffix);
-                ChatHelper.sendMessageToPlayer("&eSet the suffix of " + ChatHelper.translateAlternateColorCodes('&', suffix.trim()) + " &efor &7" + count + " &eplayers.",
-                        false);
+                ChatHelper.sendMessageToPlayer("&eSet the suffix of " + ChatHelper.translateAlternateColorCodes('&', suffix.trim()) + " &efor &7" + count + " &eplayers.");
             } else {
                 int count = nhandler.setCustomNameSuffix(target, suffix, true);
                 if (count == 0) {
-                    ChatHelper.sendMessageToPlayer("&cCan't find custom tag(s) by the name of " + target + "!", false);
+                    ChatHelper.sendMessageToPlayer("&cCan't find custom tag(s) by the name of " + target + "!");
                 } else {
                     ChatHelper.sendMessageToPlayer("&eSet the suffix of " + ChatHelper.translateAlternateColorCodes('&', suffix.trim())
-                            + " &efor the name of " + target + ".", false);
+                            + " &efor the name of " + target + ".");
                 }
             }
         } else if (action.equalsIgnoreCase("remove")) {
@@ -140,13 +138,13 @@ public class NameTagEditCommand extends CommandBase {
             } else {
                 int count = nhandler.removeCustomNameTags(target);
                 if (count == 0) {
-                    ChatHelper.sendMessageToPlayer("&Can't find target(s) by the name of " + target + "!", false);
+                    ChatHelper.sendMessageToPlayer("&Can't find target(s) by the name of " + target + "!");
                 } else {
-                    ChatHelper.sendMessageToPlayer("&eRemoved a total of&7 " + count + " &ecustom tag" + (count == 1 ? "" : "s") + " from name(s).", false);
+                    ChatHelper.sendMessageToPlayer("&eRemoved a total of&7 " + count + " &ecustom tag" + (count == 1 ? "" : "s") + " from name(s).");
                 }
             }
         } else {
-            ChatHelper.sendMessageToPlayer("&cUnknown action! Available actions: SET, SETPREFIX, SETSUFFIX, REMOVE", false);
+            ChatHelper.sendMessageToPlayer("&cUnknown action! Available actions: SET, SETPREFIX, SETSUFFIX, REMOVE");
         }
     }
 }

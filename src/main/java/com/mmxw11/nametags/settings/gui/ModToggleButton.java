@@ -16,7 +16,7 @@ public class ModToggleButton extends AbstractGUIButton {
         if (success) {
             boolean value = !modSettings.isEnabled();
             modSettings.toggleMod(value);
-            ChatHelper.sendMessageToPlayer(value ? "&aTags enabled." : "&cTags disabled.", false);
+            ChatHelper.sendMessageToPlayer(value ? "&aTags enabled." : "&cTags disabled.");
         }
     }
 
