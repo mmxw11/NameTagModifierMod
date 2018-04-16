@@ -23,10 +23,10 @@ public class ITetxComponentBuilder {
     }
 
     public List<ITextComponent> buildITextComponents(String msg) {
-        return buildIChatComponents(msg, false);
+        return buildITextComponents(msg, false);
     }
 
-    private List<ITextComponent> buildIChatComponents(String msg, boolean keepNewlines) {
+    private List<ITextComponent> buildITextComponents(String msg, boolean keepNewlines) {
         components.add(itcomp);
         if (msg == null) {
             return components;

@@ -106,14 +106,14 @@ public class NameTagRenderer {
             Team team1 = ep.getTeam();
             if (team != null) {
                 EnumVisible team$enumvisible = team.getNameTagVisibility();
-                switch (team$enumvisible.ordinal()) {
-                    case 1:
+                switch (team$enumvisible) {
+                    case ALWAYS:
                         return flag;
-                    case 2:
+                    case NEVER:
                         return false;
-                    case 3:
+                    case HIDE_FOR_OTHER_TEAMS:
                         return team1 == null ? flag : team.isSameTeam(team1) && (team.getSeeFriendlyInvisiblesEnabled() || flag);
-                    case 4:
+                    case HIDE_FOR_OWN_TEAM:
                         return team1 == null ? flag : !team.isSameTeam(team1) && flag;
                     default:
                         return true;

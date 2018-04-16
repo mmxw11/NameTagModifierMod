@@ -87,7 +87,7 @@ public class NameTagHandler {
 
     public int setCustomNameToAllPlayers(String customName) {
         NameTagMode mode = modSettings.getNameTagMode();
-        NetHandlerPlayClient nhpclient = Minecraft.getMinecraft().getNetHandler();
+        NetHandlerPlayClient nhpclient = Minecraft.getMinecraft().getConnection();
         int counter = 0;
         for (NetworkPlayerInfo info : nhpclient.getPlayerInfoMap()) {
             String tname = info.getGameProfile().getName();
@@ -202,7 +202,7 @@ public class NameTagHandler {
             ChatHelper.sendMessageToPlayer("&eRemoved a total of&7 " + size + " &ecustom tag" + (size == 1 ? "" : "s") + " from name(s).");
         } else {
             customTags.entrySet().removeIf(entry -> {
-                String pname = Minecraft.getMinecraft().thePlayer.getName();
+                String pname = Minecraft.getMinecraft().player.getName();
                 if (entry.getKey().equalsIgnoreCase(pname)) {
                     return false;
                 }

@@ -9,7 +9,7 @@ import com.mmxw11.nametags.settings.ModSettingsProfile;
 import com.mmxw11.nametags.util.ChatHelper;
 
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -39,9 +39,9 @@ public class KeyHandler {
             modSettings.toggleMod(value);
             try {
                 mod.getFileManager().saveSettingsFile(modSettings);
-                ChatHelper.sendMessageToPlayer(value ? "&aTags enabled." : "&cTags disabled.");
+                ChatHelper.sendMessageToPlayer(value ? "&aTags enabled." : "&cTags disabled.", true);
             } catch (IOException ex) {
-                ChatHelper.sendMessageToPlayer(EnumChatFormatting.RED + "Unable to save config fle! Check console for details: " + ex.getMessage());
+                ChatHelper.sendMessageToPlayer(TextFormatting.RED + "Unable to save config fle! Check console for details: " + ex.getMessage());
                 ex.printStackTrace();
             }
         }

@@ -12,9 +12,10 @@ import com.mmxw11.nametags.util.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StringUtils;
+import net.minecraft.util.text.ChatType;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -57,13 +58,13 @@ public class ModListeners {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderLiving(RenderLivingEvent.Specials.Pre<EntityLivingBase> e) {
-        if (!(e.entity instanceof EntityPlayer)) {
+        if (!(e.getEntity() instanceof EntityPlayer)) {
             return;
         }
         if (!modSettings.isEnabled()) {
             return;
         }
-        EntityPlayer ep = (EntityPlayer) e.entity;
+        EntityPlayer ep = (EntityPlayer) e.getEntity();
         String dname = ep.getDisplayName().getSiblings().get(0).getUnformattedText();
         if (dname.startsWith("[NPC]") || dname.isEmpty()) {
             return;
@@ -78,13 +79,13 @@ public class ModListeners {
         }
         e.setCanceled(true);
         if (mode == NameTagMode.EDIT) {
-            renderer.renderPlayerEntityTag(e.renderer, ep, nprofile, e.x, e.y, e.z);
+            renderer.renderPlayerEntityTag(e.getRenderer(), ep, nprofile, e.getX(), e.getY(), e.getZ());
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderGameOverlay(RenderGameOverlayEvent e) {
-        if (e.type != RenderGameOverlayEvent.ElementType.PLAYER_LIST) {
+        if (e.getType() != RenderGameOverlayEvent.ElementType.PLAYER_LIST) {
             return;
         }
         if (e.getResult() == Event.Result.DENY) {
@@ -103,7 +104,7 @@ public class ModListeners {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onClientChatReceived(ClientChatReceivedEvent e) {
-        if (e.type != 0 || e.isCanceled()) {
+        if (e.getType() != ChatType.CHAT || e.isCanceled()) {
             return;
         }
         if (!modSettings.isEnabled() || !modSettings.isChangeInChat()) {
@@ -113,7 +114,8 @@ public class ModListeners {
         if (mode == null) {
             return;
         }
-        Pair<String, Integer> sdata = ChatHelper.getPossibleChatMsgSender(e.message);
+        ITextComponent itcompmsg = e.getMessage();
+        Pair<String, Integer> sdata = ChatHelper.getPossibleChatMsgSender(itcompmsg);
         String sender = sdata.getKey();
         if (sender == null) { // no player sender or not found.
             return;
@@ -123,10 +125,10 @@ public class ModListeners {
             return;
         }
         if (mode == NameTagMode.HIDE) {
-            IChatComponent hicomp = new ChatComponentText(ChatHelper.translateAlternateColorCodes('&', "&7[H] "));
-            e.message.getSiblings().add(0, hicomp);
+            ITextComponent hicomp = new TextComponentString(ChatHelper.translateAlternateColorCodes('&', "&7[H] "));
+            itcompmsg.getSiblings().add(0, hicomp);
         } else {
-            String fmessage = e.message.getFormattedText();
+            String fmessage = itcompmsg.getFormattedText();
             String src = fmessage.substring(0, sdata.getValue());
             fmessage = nprofile.getName() + fmessage.substring(sdata.getValue() + sender.length());
             String cprefix = nprofile.getPrefix();
@@ -155,22 +157,22 @@ public class ModListeners {
             }
             e.setCanceled(true);
             ITetxComponentBuilder builder = new ITetxComponentBuilder();
-            for (IChatComponent icomp : builder.buildIChatComponents(fmessage)) {
-                Minecraft.getMinecraft().thePlayer.addChatComponentMessage(icomp);
+            for (ITextComponent itcomp : builder.buildITextComponents(fmessage)) {
+                Minecraft.getMinecraft().player.sendStatusMessage(itcomp, false);
             }
         }
     }
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent e) {
-        EntityPlayer ep = Minecraft.getMinecraft().thePlayer;
+        EntityPlayer ep = Minecraft.getMinecraft().player;
         if (ep == null) {
             return;
         }
-        if (!e.entity.getUniqueID().equals(ep.getUniqueID())) {
+        if (!e.getEntity().getUniqueID().equals(ep.getUniqueID())) {
             return;
         }
-        World eworld = e.world;
+        World eworld = e.getWorld();
         if (eworld != ep.getEntityWorld()) {
             return;
         }

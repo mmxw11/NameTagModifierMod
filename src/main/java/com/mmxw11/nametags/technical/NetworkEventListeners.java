@@ -27,7 +27,7 @@ public class NetworkEventListeners {
 
     @SubscribeEvent
     public void onClientConnnected(FMLNetworkEvent.ClientConnectedToServerEvent e) {
-        if (e.isLocal) {
+        if (e.isLocal()) {
             this.cdomain = "";
             return;
         }

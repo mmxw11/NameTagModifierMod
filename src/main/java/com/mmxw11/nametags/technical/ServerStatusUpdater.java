@@ -30,7 +30,7 @@ public class ServerStatusUpdater implements Runnable {
             return;
         }
         Minecraft minecraft = Minecraft.getMinecraft();
-        ListenableFuture<List<String>> future = minecraft.addScheduledTask(() -> minecraft.theWorld.playerEntities
+        ListenableFuture<List<String>> future = minecraft.addScheduledTask(() -> minecraft.world.playerEntities
                 .stream().map(e -> e.getName().toLowerCase()).collect(Collectors.toList()));
         try {
             List<String> names = future.get(5, TimeUnit.SECONDS);
