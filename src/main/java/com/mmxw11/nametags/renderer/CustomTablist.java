@@ -19,18 +19,20 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.DestFactor;
+import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EnumPlayerModelParts;
-import net.minecraft.scoreboard.IScoreObjectiveCriteria;
+import net.minecraft.scoreboard.IScoreCriteria.EnumRenderType;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.StringUtils;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.GameType;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldSettings;
 
 public class CustomTablist extends Gui {
 
@@ -48,215 +50,240 @@ public class CustomTablist extends Gui {
     public void renderPlayerlist() {
         ScaledResolution res = new ScaledResolution(mc);
         int width = res.getScaledWidth();
-        World world = mc.theWorld;
+        World world = mc.world;
         Scoreboard sboard = world.getScoreboard();
         ScoreObjective sobjective = sboard.getObjectiveInDisplaySlot(0);
-        NetHandlerPlayClient nhpclient = mc.getNetHandler();
-        FontRenderer frenderer = mc.fontRendererObj;
+        NetHandlerPlayClient nhpclient = mc.getConnection();
         List<NetworkPlayerInfo> nplayers = order.<NetworkPlayerInfo>sortedCopy(nhpclient.getPlayerInfoMap());
-        int i = 0;
-        int j = 0;
-        for (NetworkPlayerInfo info : nplayers) {
-            int k = frenderer.getStringWidth(getPlayerName(info));
-            i = Math.max(i, k);
-            if (sobjective != null && sobjective.getRenderType() != IScoreObjectiveCriteria.EnumRenderType.HEARTS) {
-                k = frenderer.getStringWidth(" " + sboard.getValueFromObjective(info.getGameProfile().getName(), sobjective).getScorePoints());
-                j = Math.max(j, k);
+        int lvt_6_1_ = 0;
+        int lvt_7_1_ = 0;
+        FontRenderer frenderer = mc.fontRenderer;
+        int lvt_10_2_;
+        for (NetworkPlayerInfo ninfo : nplayers) {
+            lvt_10_2_ = frenderer.getStringWidth(getPlayerName(ninfo));
+            lvt_6_1_ = Math.max(lvt_6_1_, lvt_10_2_);
+            if (sobjective != null && sobjective.getRenderType() != EnumRenderType.HEARTS) {
+                lvt_10_2_ = frenderer.getStringWidth(" " + sboard
+                        .getOrCreateScore(ninfo.getGameProfile().getName(), sobjective).getScorePoints());
+                lvt_7_1_ = Math.max(lvt_7_1_, lvt_10_2_);
             }
         }
         nplayers = nplayers.subList(0, Math.min(nplayers.size(), 80));
-        int l3 = nplayers.size();
-        int i4 = l3;
-        int j4;
-        for (j4 = 1; i4 > 20; i4 = (l3 + j4 - 1) / j4) {
-            ++j4;
+        int arg31 = nplayers.size();
+        int arg32 = arg31;
+        for (lvt_10_2_ = 1; arg32 > 20; arg32 = (arg31 + lvt_10_2_ - 1) / lvt_10_2_) {
+            ++lvt_10_2_;
         }
-        boolean flag = mc.isIntegratedServerRunning() || nhpclient.getNetworkManager().getIsencrypted();
-        int l;
+        boolean lvt_11_1_ = mc.isIntegratedServerRunning() || nhpclient.getNetworkManager().isEncrypted();
+        int lvt_12_3_;
         if (sobjective != null) {
-            if (sobjective.getRenderType() == IScoreObjectiveCriteria.EnumRenderType.HEARTS) {
-                l = 90;
+            if (sobjective.getRenderType() == EnumRenderType.HEARTS) {
+                lvt_12_3_ = 90;
             } else {
-                l = j;
+                lvt_12_3_ = lvt_7_1_;
             }
         } else {
-            l = 0;
+            lvt_12_3_ = 0;
         }
-        int i1 = Math.min(j4 * ((flag ? 9 : 0) + i + l + 13), width - 50) / j4;
-        int j1 = width / 2 - (i1 * j4 + (j4 - 1) * 5) / 2;
-        int k1 = 10;
-        int l1 = i1 * j4 + (j4 - 1) * 5;
+        int lvt_13_1_ = Math.min(lvt_10_2_ * ((lvt_11_1_ ? 9 : 0) + lvt_6_1_ + lvt_12_3_ + 13),
+                width - 50) / lvt_10_2_;
+        int lvt_14_1_ = width / 2 - (lvt_13_1_ * lvt_10_2_ + (lvt_10_2_ - 1) * 5) / 2;
+        int lvt_15_1_ = 10;
+        int lvt_16_1_ = lvt_13_1_ * lvt_10_2_ + (lvt_10_2_ - 1) * 5;
         List<String> list1 = null;
         List<String> list2 = null;
-        IChatComponent footer = (IChatComponent) getPlayerListField("field_175255_h", "footer");
-        IChatComponent header = (IChatComponent) getPlayerListField("field_175256_i", "header");
+        ITextComponent footer = (ITextComponent) getPlayerListField("field_175255_h", "footer");
+        ITextComponent header = (ITextComponent) getPlayerListField("field_175256_i", "header");
         if (header != null) {
             list1 = frenderer.listFormattedStringToWidth(header.getFormattedText(), width - 50);
-            for (String s : list1) {
-                l1 = Math.max(l1, frenderer.getStringWidth(s));
+            for (String value : list1) {
+                lvt_16_1_ = Math.max(lvt_16_1_, frenderer.getStringWidth(value));
             }
         }
         if (footer != null) {
             list2 = frenderer.listFormattedStringToWidth(footer.getFormattedText(), width - 50);
-            for (String s2 : list2) {
-                l1 = Math.max(l1, frenderer.getStringWidth(s2));
+            for (String value : list1) {
+                lvt_16_1_ = Math.max(lvt_16_1_, frenderer.getStringWidth(value));
             }
         }
         if (list1 != null) {
-            drawRect(width / 2 - l1 / 2 - 1, k1 - 1, width / 2 + l1 / 2 + 1, k1 + list1.size() * frenderer.FONT_HEIGHT, Integer.MIN_VALUE);
-            for (String s3 : list1) {
-                int i2 = frenderer.getStringWidth(s3);
-                frenderer.drawStringWithShadow(s3, width / 2 - i2 / 2, k1, -1);
-                k1 += frenderer.FONT_HEIGHT;
+            drawRect(width / 2 - lvt_16_1_ / 2 - 1, lvt_15_1_ - 1, width / 2 + lvt_16_1_ / 2 + 1,
+                    lvt_15_1_ + list1.size() * frenderer.FONT_HEIGHT, Integer.MIN_VALUE);
+            for (String s : list1) {
+                int swidth = frenderer.getStringWidth(s);
+                frenderer.drawStringWithShadow(s, (float) (width / 2 - swidth / 2), (float) lvt_15_1_, -1);
+                lvt_15_1_ += frenderer.FONT_HEIGHT;
             }
-            ++k1;
+            ++lvt_15_1_;
         }
-        drawRect(width / 2 - l1 / 2 - 1, k1 - 1, width / 2 + l1 / 2 + 1, k1 + i4 * 9, Integer.MIN_VALUE);
-        for (int k4 = 0; k4 < l3; ++k4) {
-            int l4 = k4 / i4;
-            int i5 = k4 % i4;
-            int j2 = j1 + l4 * i1 + l4 * 5;
-            int k2 = k1 + i5 * 9;
-            drawRect(j2, k2, j2 + i1, k2 + 8, 553648127);
+        drawRect(width / 2 - lvt_16_1_ / 2 - 1, lvt_15_1_ - 1, width / 2 + lvt_16_1_ / 2 + 1, lvt_15_1_ + arg32 * 9, Integer.MIN_VALUE);
+        for (int arg35 = 0; arg35 < arg31; ++arg35) {
+            int arg36 = arg35 / arg32;
+            int swidth = arg35 % arg32;
+            int lvt_22_1_ = lvt_14_1_ + arg36 * lvt_13_1_ + arg36 * 5;
+            int lvt_23_1_ = lvt_15_1_ + swidth * 9;
+            drawRect(lvt_22_1_, lvt_23_1_, lvt_22_1_ + lvt_13_1_, lvt_23_1_ + 8, 553648127);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             GlStateManager.enableAlpha();
             GlStateManager.enableBlend();
-            GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-            if (k4 < nplayers.size()) {
-                NetworkPlayerInfo networkplayerinfo1 = nplayers.get(k4);
-                String s1 = getPlayerName(networkplayerinfo1);
-                GameProfile gameprofile = networkplayerinfo1.getGameProfile();
-                if (flag) {
-                    EntityPlayer entityplayer = world.getPlayerEntityByUUID(gameprofile.getId());
-                    boolean flag1 = entityplayer != null && entityplayer.isWearing(EnumPlayerModelParts.CAPE)
-                            && (gameprofile.getName().equals("Dinnerbone") || gameprofile.getName().equals("Grumm"));
-                    mc.getTextureManager().bindTexture(networkplayerinfo1.getLocationSkin());
-                    int l2 = 8 + (flag1 ? 8 : 0);
-                    int i3 = 8 * (flag1 ? -1 : 1);
-                    Gui.drawScaledCustomSizeModalRect(j2, k2, 8.0F, l2, 8, i3, 8, 8, 64.0F, 64.0F);
-                    if (entityplayer != null && entityplayer.isWearing(EnumPlayerModelParts.HAT)) {
-                        int j3 = 8 + (flag1 ? 8 : 0);
-                        int k3 = 8 * (flag1 ? -1 : 1);
-                        Gui.drawScaledCustomSizeModalRect(j2, k2, 40.0F, j3, 8, k3, 8, 8, 64.0F, 64.0F);
+            GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA,
+                    SourceFactor.ONE, DestFactor.ZERO);
+            if (arg35 < nplayers.size()) {
+                NetworkPlayerInfo ninfo2 = nplayers.get(arg35);
+                GameProfile lvt_25_1_ = ninfo2.getGameProfile();
+                int lvt_28_2_;
+                if (lvt_11_1_) {
+                    EntityPlayer lvt_26_2_ = world.getPlayerEntityByUUID(lvt_25_1_.getId());
+                    boolean lvt_27_2_ = lvt_26_2_ != null && lvt_26_2_.isWearing(EnumPlayerModelParts.CAPE)
+                            && ("Dinnerbone".equals(lvt_25_1_.getName()) || "Grumm".equals(lvt_25_1_.getName()));
+                    mc.getTextureManager().bindTexture(ninfo2.getLocationSkin());
+                    lvt_28_2_ = 8 + (lvt_27_2_ ? 8 : 0);
+                    int lvt_29_1_ = 8 * (lvt_27_2_ ? -1 : 1);
+                    Gui.drawScaledCustomSizeModalRect(lvt_22_1_, lvt_23_1_, 8.0F, (float) lvt_28_2_, 8, lvt_29_1_, 8, 8,
+                            64.0F, 64.0F);
+                    if (lvt_26_2_ != null && lvt_26_2_.isWearing(EnumPlayerModelParts.HAT)) {
+                        int lvt_30_1_ = 8 + (lvt_27_2_ ? 8 : 0);
+                        int lvt_31_1_ = 8 * (lvt_27_2_ ? -1 : 1);
+                        Gui.drawScaledCustomSizeModalRect(lvt_22_1_, lvt_23_1_, 40.0F, (float) lvt_30_1_, 8, lvt_31_1_,
+                                8, 8, 64.0F, 64.0F);
                     }
-                    j2 += 9;
+                    lvt_22_1_ += 9;
                 }
-                if (networkplayerinfo1.getGameType() == WorldSettings.GameType.SPECTATOR) {
-                    s1 = EnumChatFormatting.ITALIC + s1;
-                    frenderer.drawStringWithShadow(s1, j2, k2, -1862270977);
+                String arg37 = getPlayerName(ninfo2);
+                if (ninfo2.getGameType() == GameType.SPECTATOR) {
+                    frenderer.drawStringWithShadow(TextFormatting.ITALIC + arg37, (float) lvt_22_1_,
+                            (float) lvt_23_1_, -1862270977);
                 } else {
-                    frenderer.drawStringWithShadow(s1, j2, k2, -1);
+                    frenderer.drawStringWithShadow(arg37, (float) lvt_22_1_, (float) lvt_23_1_, -1);
                 }
-                if (sobjective != null && networkplayerinfo1.getGameType() != WorldSettings.GameType.SPECTATOR) {
-                    int k5 = j2 + i + 1;
-                    int l5 = k5 + l;
-                    if (l5 - k5 > 5) {
-                        drawScoreboardValues(sobjective, k2, gameprofile.getName(), k5, l5, networkplayerinfo1);
+                if (sobjective != null && ninfo2.getGameType() != GameType.SPECTATOR) {
+                    int arg38 = lvt_22_1_ + lvt_6_1_ + 1;
+                    lvt_28_2_ = arg38 + lvt_12_3_;
+                    if (lvt_28_2_ - arg38 > 5) {
+                        drawScoreboardValues(sobjective, lvt_23_1_, lvt_25_1_.getName(), arg38, lvt_28_2_, ninfo2);
                     }
                 }
-                drawPing(i1, j2 - (flag ? 9 : 0), k2, networkplayerinfo1);
+                drawPing(lvt_13_1_, lvt_22_1_ - (lvt_11_1_ ? 9 : 0), lvt_23_1_, ninfo2);
             }
         }
         if (list2 != null) {
-            k1 = k1 + i4 * 9 + 1;
-            drawRect(width / 2 - l1 / 2 - 1, k1 - 1, width / 2 + l1 / 2 + 1, k1 + list2.size() * frenderer.FONT_HEIGHT, Integer.MIN_VALUE);
-            for (String s4 : list2) {
-                int j5 = frenderer.getStringWidth(s4);
-                frenderer.drawStringWithShadow(s4, width / 2 - j5 / 2, k1, -1);
-                k1 += frenderer.FONT_HEIGHT;
+            lvt_15_1_ += arg32 * 9 + 1;
+            drawRect(width / 2 - lvt_16_1_ / 2 - 1, lvt_15_1_ - 1,
+                    width / 2 + lvt_16_1_ / 2 + 1,
+                    lvt_15_1_ + list2.size() * frenderer.FONT_HEIGHT, Integer.MIN_VALUE);
+            for (String s : list2) {
+                int swidth = frenderer.getStringWidth(s);
+                frenderer.drawStringWithShadow(s, (float) (width / 2 - swidth / 2), (float) lvt_15_1_, -1);
+                lvt_15_1_ += frenderer.FONT_HEIGHT;
             }
         }
     }
 
-    private void drawPing(int p_175245_1_, int p_175245_2_, int p_175245_3_, NetworkPlayerInfo info) {
+    private void drawPing(int p_drawPing_1_, int p_drawPing_2_, int p_drawPing_3_, NetworkPlayerInfo info) {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.getTextureManager().bindTexture(icons);
-        int i = 0;
-        int j = 0;
+        mc.getTextureManager().bindTexture(ICONS);
+        byte lvt_6_6_;
         if (info.getResponseTime() < 0) {
-            j = 5;
+            lvt_6_6_ = 5;
         } else if (info.getResponseTime() < 150) {
-            j = 0;
+            lvt_6_6_ = 0;
         } else if (info.getResponseTime() < 300) {
-            j = 1;
+            lvt_6_6_ = 1;
         } else if (info.getResponseTime() < 600) {
-            j = 2;
+            lvt_6_6_ = 2;
         } else if (info.getResponseTime() < 1000) {
-            j = 3;
+            lvt_6_6_ = 3;
         } else {
-            j = 4;
+            lvt_6_6_ = 4;
         }
         this.zLevel += 100.0F;
-        this.drawTexturedModalRect(p_175245_2_ + p_175245_1_ - 11, p_175245_3_, 0 + i * 10, 176 + j * 8, 10, 8);
+        drawTexturedModalRect(p_drawPing_2_ + p_drawPing_1_ - 11, p_drawPing_3_, 0, 176 + lvt_6_6_ * 8, 10, 8);
         this.zLevel -= 100.0F;
     }
 
-    private void drawScoreboardValues(ScoreObjective p_175247_1_, int p_175247_2_, String p_175247_3_, int p_175247_4_, int p_175247_5_, NetworkPlayerInfo p_175247_6_) {
-        long lastTimeOpened = 0;
-        Object lastTime = getPlayerListField("field_175253_j", "lastTimeOpened");
-        if (lastTime != null) {
-            lastTimeOpened = (long) lastTime;
-        }
-        int i = p_175247_1_.getScoreboard().getValueFromObjective(p_175247_3_, p_175247_1_).getScorePoints();
+    private void drawScoreboardValues(ScoreObjective p_drawScoreboardValues_1_, int p_drawScoreboardValues_2_,
+            String p_drawScoreboardValues_3_, int p_drawScoreboardValues_4_, int p_drawScoreboardValues_5_,
+            NetworkPlayerInfo p_drawScoreboardValues_6_) {
+        long lastTimeOpened = (long) getPlayerListField("field_175253_j", "lastTimeOpened");
+        int lvt_7_1_ = p_drawScoreboardValues_1_.getScoreboard()
+                .getOrCreateScore(p_drawScoreboardValues_3_, p_drawScoreboardValues_1_).getScorePoints();
         GuiIngame igGui = mc.ingameGUI;
-        if (p_175247_1_.getRenderType() == IScoreObjectiveCriteria.EnumRenderType.HEARTS) {
-            mc.getTextureManager().bindTexture(icons);
-            if (lastTimeOpened == p_175247_6_.func_178855_p()) {
-                if (i < p_175247_6_.func_178835_l()) {
-                    p_175247_6_.func_178846_a(Minecraft.getSystemTime());
-                    p_175247_6_.func_178844_b(igGui.getUpdateCounter() + 20);
-                } else if (i > p_175247_6_.func_178835_l()) {
-                    p_175247_6_.func_178846_a(Minecraft.getSystemTime());
-                    p_175247_6_.func_178844_b(igGui.getUpdateCounter() + 10);
+        if (p_drawScoreboardValues_1_.getRenderType() == EnumRenderType.HEARTS) {
+            mc.getTextureManager().bindTexture(ICONS);
+            if (lastTimeOpened == p_drawScoreboardValues_6_.getRenderVisibilityId()) {
+                if (lvt_7_1_ < p_drawScoreboardValues_6_.getLastHealth()) {
+                    p_drawScoreboardValues_6_.setLastHealthTime(Minecraft.getSystemTime());
+                    p_drawScoreboardValues_6_.setHealthBlinkTime((long) (igGui.getUpdateCounter() + 20));
+                } else if (lvt_7_1_ > p_drawScoreboardValues_6_.getLastHealth()) {
+                    p_drawScoreboardValues_6_.setLastHealthTime(Minecraft.getSystemTime());
+                    p_drawScoreboardValues_6_.setHealthBlinkTime((long) (igGui.getUpdateCounter() + 10));
                 }
             }
-            if (Minecraft.getSystemTime() - p_175247_6_.func_178847_n() > 1000L || lastTimeOpened != p_175247_6_.func_178855_p()) {
-                p_175247_6_.func_178836_b(i);
-                p_175247_6_.func_178857_c(i);
-                p_175247_6_.func_178846_a(Minecraft.getSystemTime());
+            if (Minecraft.getSystemTime() - p_drawScoreboardValues_6_.getLastHealthTime() > 1000L
+                    || lastTimeOpened != p_drawScoreboardValues_6_.getRenderVisibilityId()) {
+                p_drawScoreboardValues_6_.setLastHealth(lvt_7_1_);
+                p_drawScoreboardValues_6_.setDisplayHealth(lvt_7_1_);
+                p_drawScoreboardValues_6_.setLastHealthTime(Minecraft.getSystemTime());
             }
-            p_175247_6_.func_178843_c(lastTimeOpened);
-            p_175247_6_.func_178836_b(i);
-            int j = MathHelper.ceiling_float_int(Math.max(i, p_175247_6_.func_178860_m()) / 2.0F);
-            int k = Math.max(MathHelper.ceiling_float_int(i / 2), Math.max(MathHelper.ceiling_float_int(p_175247_6_.func_178860_m() / 2), 10));
-            boolean flag = p_175247_6_.func_178858_o() > igGui.getUpdateCounter()
-                    && (p_175247_6_.func_178858_o() - igGui.getUpdateCounter()) / 3L % 2L == 1L;
-            if (j > 0) {
-                float f = Math.min((float) (p_175247_5_ - p_175247_4_ - 4) / (float) k, 9.0F);
-                if (f > 3.0F) {
-                    for (int l = j; l < k; ++l) {
-                        drawTexturedModalRect(p_175247_4_ + l * f, p_175247_2_, flag ? 25 : 16, 0, 9, 9);
+            p_drawScoreboardValues_6_.setRenderVisibilityId(lastTimeOpened);
+            p_drawScoreboardValues_6_.setLastHealth(lvt_7_1_);
+            int lvt_8_2_ = MathHelper.ceil((float) Math.max(lvt_7_1_, p_drawScoreboardValues_6_.getDisplayHealth()) / 2.0F);
+            int lvt_9_1_ = Math.max(MathHelper.ceil((float) (lvt_7_1_ / 2)),
+                    Math.max(MathHelper.ceil((float) (p_drawScoreboardValues_6_.getDisplayHealth() / 2)), 10));
+            boolean lvt_10_1_ = p_drawScoreboardValues_6_
+                    .getHealthBlinkTime() > (long) igGui.getUpdateCounter()
+                    && (p_drawScoreboardValues_6_.getHealthBlinkTime() - (long) igGui.getUpdateCounter()) / 3L
+                            % 2L == 1L;
+            if (lvt_8_2_ > 0) {
+                float lvt_11_1_ = Math.min(
+                        (float) (p_drawScoreboardValues_5_ - p_drawScoreboardValues_4_ - 4) / (float) lvt_9_1_, 9.0F);
+                if (lvt_11_1_ > 3.0F) {
+                    int lvt_12_3_;
+                    for (lvt_12_3_ = lvt_8_2_; lvt_12_3_ < lvt_9_1_; ++lvt_12_3_) {
+                        drawTexturedModalRect((float) p_drawScoreboardValues_4_ + (float) lvt_12_3_ * lvt_11_1_,
+                                (float) p_drawScoreboardValues_2_, lvt_10_1_ ? 25 : 16, 0, 9, 9);
                     }
-                    for (int j1 = 0; j1 < j; ++j1) {
-                        drawTexturedModalRect(p_175247_4_ + j1 * f, p_175247_2_, flag ? 25 : 16, 0, 9, 9);
-                        if (flag) {
-                            if (j1 * 2 + 1 < p_175247_6_.func_178860_m()) {
-                                drawTexturedModalRect(p_175247_4_ + j1 * f, p_175247_2_, 70, 0, 9, 9);
+                    for (lvt_12_3_ = 0; lvt_12_3_ < lvt_8_2_; ++lvt_12_3_) {
+                        drawTexturedModalRect((float) p_drawScoreboardValues_4_ + (float) lvt_12_3_ * lvt_11_1_,
+                                (float) p_drawScoreboardValues_2_, lvt_10_1_ ? 25 : 16, 0, 9, 9);
+                        if (lvt_10_1_) {
+                            if (lvt_12_3_ * 2 + 1 < p_drawScoreboardValues_6_.getDisplayHealth()) {
+                                drawTexturedModalRect((float) p_drawScoreboardValues_4_ + (float) lvt_12_3_ * lvt_11_1_,
+                                        (float) p_drawScoreboardValues_2_, 70, 0, 9, 9);
                             }
-                            if (j1 * 2 + 1 == p_175247_6_.func_178860_m()) {
-                                drawTexturedModalRect(p_175247_4_ + j1 * f, p_175247_2_, 79, 0, 9, 9);
+                            if (lvt_12_3_ * 2 + 1 == p_drawScoreboardValues_6_.getDisplayHealth()) {
+                                drawTexturedModalRect((float) p_drawScoreboardValues_4_ + (float) lvt_12_3_ * lvt_11_1_,
+                                        (float) p_drawScoreboardValues_2_, 79, 0, 9, 9);
                             }
                         }
-                        if (j1 * 2 + 1 < i) {
-                            drawTexturedModalRect(p_175247_4_ + j1 * f, p_175247_2_, j1 >= 10 ? 160 : 52, 0, 9, 9);
+                        if (lvt_12_3_ * 2 + 1 < lvt_7_1_) {
+                            drawTexturedModalRect((float) p_drawScoreboardValues_4_ + (float) lvt_12_3_ * lvt_11_1_,
+                                    (float) p_drawScoreboardValues_2_, lvt_12_3_ >= 10 ? 160 : 52, 0, 9, 9);
                         }
-                        if (j1 * 2 + 1 == i) {
-                            drawTexturedModalRect(p_175247_4_ + j1 * f, p_175247_2_, j1 >= 10 ? 169 : 61, 0, 9, 9);
+                        if (lvt_12_3_ * 2 + 1 == lvt_7_1_) {
+                            drawTexturedModalRect((float) p_drawScoreboardValues_4_ + (float) lvt_12_3_ * lvt_11_1_,
+                                    (float) p_drawScoreboardValues_2_, lvt_12_3_ >= 10 ? 169 : 61, 0, 9, 9);
                         }
                     }
                 } else {
-                    float f1 = MathHelper.clamp_float(i / 20.0F, 0.0F, 1.0F);
-                    int i1 = (int) ((1.0F - f1) * 255.0F) << 16 | (int) (f1 * 255.0F) << 8;
-                    String s = "" + i / 2.0F;
-                    if (p_175247_5_ - mc.fontRendererObj.getStringWidth(s + "hp") >= p_175247_4_) {
-                        s = s + "hp";
+                    float arg15 = MathHelper.clamp((float) lvt_7_1_ / 20.0F, 0.0F, 1.0F);
+                    int lvt_13_1_ = (int) ((1.0F - arg15) * 255.0F) << 16 | (int) (arg15 * 255.0F) << 8;
+                    String lvt_14_1_ = "" + (float) lvt_7_1_ / 2.0F;
+                    if (p_drawScoreboardValues_5_
+                            - mc.fontRenderer.getStringWidth(lvt_14_1_ + "hp") >= p_drawScoreboardValues_4_) {
+                        lvt_14_1_ = lvt_14_1_ + "hp";
                     }
-                    mc.fontRendererObj.drawStringWithShadow(s, (p_175247_5_ + p_175247_4_) / 2 - mc.fontRendererObj.getStringWidth(s) / 2, p_175247_2_, i1);
+                    mc.fontRenderer.drawStringWithShadow(lvt_14_1_,
+                            (float) ((p_drawScoreboardValues_5_ + p_drawScoreboardValues_4_) / 2
+                                    - mc.fontRenderer.getStringWidth(lvt_14_1_) / 2),
+                            (float) p_drawScoreboardValues_2_, lvt_13_1_);
                 }
             }
         } else {
-            String s1 = EnumChatFormatting.YELLOW + "" + i;
-            mc.fontRendererObj.drawStringWithShadow(s1, p_175247_5_ - mc.fontRendererObj.getStringWidth(s1), p_175247_2_, 16777215);
+            String arg14 = TextFormatting.YELLOW + "" + lvt_7_1_;
+            mc.fontRenderer.drawStringWithShadow(arg14,
+                    (float) (p_drawScoreboardValues_5_ - mc.fontRenderer.getStringWidth(arg14)),
+                    (float) p_drawScoreboardValues_2_, 16777215);
         }
     }
 
@@ -315,12 +342,12 @@ public class CustomTablist extends Gui {
                     if (cprefix != null) {
                         renderName = ChatHelper.translateAlternateColorCodes('&', cprefix) + renderName;
                     } else if (!aremove) {
-                        renderName = team.getColorPrefix() + renderName;
+                        renderName = team.getPrefix() + renderName;
                     }
                     if (csuffix != null) {
                         renderName += ChatHelper.translateAlternateColorCodes('&', csuffix);
                     } else if (!aremove) {
-                        renderName += team.getColorSuffix();
+                        renderName += team.getSuffix();
                     }
                 } else {
                     renderName = team.formatString(nprofile.getName());

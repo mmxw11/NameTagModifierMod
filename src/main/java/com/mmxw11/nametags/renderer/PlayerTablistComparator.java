@@ -6,7 +6,7 @@ import com.google.common.collect.ComparisonChain;
 
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.scoreboard.ScorePlayerTeam;
-import net.minecraft.world.WorldSettings;
+import net.minecraft.world.GameType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -17,9 +17,10 @@ public class PlayerTablistComparator implements Comparator<NetworkPlayerInfo> {
     public int compare(NetworkPlayerInfo info1, NetworkPlayerInfo info2) {
         ScorePlayerTeam scoreplayerteam = info1.getPlayerTeam();
         ScorePlayerTeam scoreplayerteam1 = info2.getPlayerTeam();
-        return ComparisonChain.start().compareTrueFirst(info1.getGameType() != WorldSettings.GameType.SPECTATOR,
-                info2.getGameType() != WorldSettings.GameType.SPECTATOR).compare(scoreplayerteam != null
-                        ? scoreplayerteam.getRegisteredName() : "", scoreplayerteam1 != null ? scoreplayerteam1.getRegisteredName() : "")
+        return ComparisonChain.start()
+                .compareTrueFirst(info1.getGameType() != GameType.SPECTATOR,
+                        info2.getGameType() != GameType.SPECTATOR)
+                .compare(scoreplayerteam != null ? scoreplayerteam.getName() : "", scoreplayerteam1 != null ? scoreplayerteam1.getName() : "")
                 .compare(info1.getGameProfile().getName(), info2.getGameProfile().getName()).result();
     }
 }
