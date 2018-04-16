@@ -14,12 +14,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class PlayerTablistComparator implements Comparator<NetworkPlayerInfo> {
 
     @Override
-    public int compare(NetworkPlayerInfo p_compare_1_, NetworkPlayerInfo p_compare_2_) {
-        ScorePlayerTeam scoreplayerteam = p_compare_1_.getPlayerTeam();
-        ScorePlayerTeam scoreplayerteam1 = p_compare_2_.getPlayerTeam();
-        return ComparisonChain.start().compareTrueFirst(p_compare_1_.getGameType() != WorldSettings.GameType.SPECTATOR,
-                p_compare_2_.getGameType() != WorldSettings.GameType.SPECTATOR).compare(scoreplayerteam != null
+    public int compare(NetworkPlayerInfo info1, NetworkPlayerInfo info2) {
+        ScorePlayerTeam scoreplayerteam = info1.getPlayerTeam();
+        ScorePlayerTeam scoreplayerteam1 = info2.getPlayerTeam();
+        return ComparisonChain.start().compareTrueFirst(info1.getGameType() != WorldSettings.GameType.SPECTATOR,
+                info2.getGameType() != WorldSettings.GameType.SPECTATOR).compare(scoreplayerteam != null
                         ? scoreplayerteam.getRegisteredName() : "", scoreplayerteam1 != null ? scoreplayerteam1.getRegisteredName() : "")
-                .compare(p_compare_1_.getGameProfile().getName(), p_compare_2_.getGameProfile().getName()).result();
+                .compare(info1.getGameProfile().getName(), info2.getGameProfile().getName()).result();
     }
 }
