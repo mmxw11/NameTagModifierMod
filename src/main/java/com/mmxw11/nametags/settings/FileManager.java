@@ -3,6 +3,7 @@ package com.mmxw11.nametags.settings;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -106,22 +107,18 @@ public class FileManager {
         return modSettings;
     }
 
-    public InputStream getJarResource(String filename) {
+    public InputStream getJarResource(String filename) throws IOException {
         if (filename == null) {
             throw new IllegalArgumentException("Filename cannot be null");
         }
         filename = filename.replaceAll("\\\\", "/");
-        try {
-            URL url = getClass().getClassLoader().getResource(filename);
-            if (url == null) {
-                return null;
-            }
-            URLConnection conn = url.openConnection();
-            conn.setUseCaches(false);
-            return conn.getInputStream();
-        } catch (IOException e) {
-            return null;
+        URL url = getClass().getClassLoader().getResource(filename);
+        if (url == null) {
+            throw new FileNotFoundException("File '" + filename + "' not found.");
         }
+        URLConnection conn = url.openConnection();
+        conn.setUseCaches(false);
+        return conn.getInputStream();
     }
 
     private File getRootFolder() {
